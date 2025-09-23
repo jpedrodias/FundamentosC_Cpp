@@ -3,6 +3,7 @@
 /*
 4-	Desenvolva um programa que permita converter o valor de segundos apresentado pelo utilizador nos minutos correspondentes.
 */
+
 int main() {
     int segundos, minutos, sobras;
 

@@ -4,7 +4,6 @@
 2-	Desenvolva um programa que permita fazer um incremento de 3 valores ao valor apresentado pelo utilizador.
 */
 
-
 int main() {
     int valor;
 
