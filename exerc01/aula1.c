@@ -13,15 +13,15 @@ int main() {
     // primeira operação
     x = y++ * 4; // x agora vale 5
 
-    printf("O resultado da primeira operação é:  %d\n", x);
+    printf("O resultado da primeira operação é:  %i\n", x); // usando especificador de formato %i para inteiros
     
     // segunda operação
     x = 3 * 4 + y;
-    printf("O resultado da segunda operação é:  %d\n", x);
+    printf("O resultado da segunda operação é:  %i\n", x);
     
     // terceira operação
     x = (3+4) * y;
-    printf("O resultado da terceira operação é:  %d\n", x);
+    printf("O resultado da terceira operação é:  %i\n", x);
 
 
     return 0; // retornar 0 para indicar que o programa terminou corretamente
