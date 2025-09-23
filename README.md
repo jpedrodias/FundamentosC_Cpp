@@ -2,7 +2,7 @@
 Fundamentos em Programação em C/C++
 
 
-#3 Resumo do Conteúdo Programático
+# Resumo do Conteúdo Programático
 * Estrutura de um programa em C/C++
 * Função main ()
 * Estrutura de um programa
