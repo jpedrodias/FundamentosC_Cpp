@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 /*
-Desenvolva um programa para converter Euros para Dólares.
+4- Desenvolva um programa para converter Euros para Dólares.
 */
 
 int main() {

@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 /*
-Tabuada do número digitado sem utilizar ciclos...
+5- Tabuada do número digitado sem utilizar ciclos...
 */
 
 int main() {

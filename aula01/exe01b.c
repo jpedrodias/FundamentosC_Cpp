@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 /*
-Desenvolva um programa que permita a adição de dois números inteiros.
+2- Desenvolva um programa que permita a adição de dois números inteiros.
 */
 
 int main() {
