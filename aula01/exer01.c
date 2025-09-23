@@ -1,5 +1,8 @@
-# include <stdio.h> // incluir biblioteca padrão de entrada e saída
+#include <stdio.h> // incluir biblioteca padrão de entrada e saída
 
+/*
+Desenvolva um programa que permita realizar operações matemáticas simples.
+*/
 
 // função principal
 int main() {
