@@ -1,10 +1,12 @@
 #include <stdio.h>
-
+#include <locale.h>
 /*
 4-	Desenvolva um programa que permita converter o valor de segundos apresentado pelo utilizador nos minutos correspondentes.
 */
 
 int main() {
+    setlocale(LC_ALL, "Portuguese");
+
     int segundos, minutos, sobras;
 
     printf("Digite o valor em segundos: ");
