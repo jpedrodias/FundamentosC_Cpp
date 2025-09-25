@@ -98,7 +98,7 @@ int exemplo_6(){
     int numeroPedidos;     // número de números a inserir;
     int contador = 0;      // contador de números dentro da condição
     int numero;            // leitura do número inserido
-    int fora;
+    int fora; // ups esqueci-me que era para contar os foras
 
 
     printf("Digite quantos números deseja inserir: ");
