@@ -1,11 +1,13 @@
+/*
+7.	Utilizando a estrutura de repetição for, faça um programa em C que receba 10 números e 
+conte quantos deles estão no intervalo [10,20] e quantos deles estão fora do intervalo, 
+escrevendo estas informações. 
+
+*/
+
 #include <stdio.h>
 #include <locale.h>
 
-/*
-- (1) Solicitar ao utilizador n números e
-- (2) Contar quantos números que estão entre 10 e 20
-- (3) e ... sem usar IFs.
-*/
 int main(){
     const int MINIMO = 10; // condição 2
     const int MAXIMO = 20; // limites do problema
@@ -23,6 +25,7 @@ int main(){
         printf("Digite o %dº número: ", i);
         scanf("%d", &numero);
         contador += (int)((numero >= MINIMO) * (numero <= MAXIMO));
+        //contador += (int)(numero >= MINIMO && numero <= MAXIMO);
     }
     fora = numeroPedidos - contador;
     printf("Total de números entre 10 e 20: %d\n", contador);

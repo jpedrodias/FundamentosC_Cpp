@@ -1,9 +1,17 @@
+/*
+8.	Triângulo de números
+Construa um programa que, para n = 5, escreva:
+1.	1
+2.	12
+3.	123
+4.	1234
+5.	12345
+
+*/
+
 #include <stdio.h>
 #include <locale.h>
 
-/*
-O utilizador ao inserir o número de linhas que quer, desenhando um triângulo
-*/
 int main(){
     int linhas;
 
@@ -11,9 +19,9 @@ int main(){
     scanf("%d", &linhas);
 
     for(int i = 1; i <= linhas; i++){
-        printf("%d ", i);
+        printf("%d. ", i);
         for(int j = 1; j <= i; j++){
-            printf("*");
+            printf("%d", j);
         }
         printf("\n");
     }

@@ -1,9 +1,11 @@
+/*
+6.	Leia várias idades e calcule a média entre as idades (usar uma variável para idade).
+*/
+
 #include <stdio.h>
 #include <locale.h>
 
-/*
-Calcula a média das idade de 5 pessoas
-*/
+
 int main(){
     int numero_pessoas;
     int idade, soma= 0;

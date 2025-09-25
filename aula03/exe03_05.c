@@ -1,10 +1,13 @@
+/*
+5.	Ler um valor inteiro (aceitar somente valores entre 1 e 10) e escrever a tabuada de 1 a 10 do valor lido.
+*/
+
 #include <stdio.h>
 #include <locale.h>
 
-/*
-Apresenta a Tabuada de Multiplicação de um número qualquer
-*/
-int main(){       
+int main(){
+    setlocale(LC_ALL, "Portuguese");
+
     int numero;
 
     printf("Digite um número para ver sua tabuada: ");
