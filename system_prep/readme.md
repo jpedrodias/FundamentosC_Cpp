@@ -63,6 +63,9 @@ Para um ambiente isolado e consistente, usando containers Docker dentro do VS Co
 6. Compile e execute código como no Nível 2 (ex.: `make main` no diretório `aula01`).
 7. Para depuração: Use `gdb` ou `lldb` no terminal, ou configure no VS Code.
 
+### Vídeo Tutorial
+Assista a este vídeo para ver as etapas em ação: [Desenvolvendo com Dev Containers no VS Code](https://www.youtube.com/watch?v=0H2miBK_gAk)
+
 ### Prós
 - Ambiente isolado e consistente (mesmo em diferentes máquinas), com ferramentas pré-configuradas (gcc, make, valgrind, etc.).
 - Integração perfeita com VS Code; evita conflitos com o sistema host.
