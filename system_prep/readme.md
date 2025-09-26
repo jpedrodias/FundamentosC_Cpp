@@ -64,7 +64,9 @@ Para um ambiente isolado e consistente, usando containers Docker dentro do VS Co
 7. Para depuração: Use `gdb` ou `lldb` no terminal, ou configure no VS Code.
 
 ### Vídeo Tutorial
-Assista a este vídeo para ver as etapas em ação: [Desenvolvendo com Dev Containers no VS Code](https://www.youtube.com/watch?v=0H2miBK_gAk)
+Assista a este vídeo para ver as etapas em ação: 
+- [How to: Development Containers](https://www.youtube.com/watch?v=-0QLIodwRlk)
+
 
 ### Prós
 - Ambiente isolado e consistente (mesmo em diferentes máquinas), com ferramentas pré-configuradas (gcc, make, valgrind, etc.).
