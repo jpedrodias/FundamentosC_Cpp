@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <locale.h>
-#include <stdlib.h>
 
 // gcc -o myapp aula04.c
 // ./myapp
@@ -16,6 +15,7 @@ int main() {
 
     return 0;
 }
+
 
 void exemplo_while() {
 
