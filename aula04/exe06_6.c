@@ -12,13 +12,6 @@ ATENÇÃO:
 
 */
 
-
-/*
-4 - Escreva um programa que defina um número secreto (por exemplo, 7) e peça ao utilizador para adivinhar esse número.
-O programa deve continuar a pedir um palpite até que o utilizador acerte. Quando acertar, o programa deve exibir uma mensagem de sucesso.
-PS: Ainda sem usar IFs ou do Whiles
-*/
-
 #include <stdio.h>
 #include <stdbool.h>
 
@@ -56,7 +49,7 @@ int main(){
 
         tentativas = 0;
         acertou = false;
-        
+
         while (!acertou && tentativas < _MAX_ATTEMPTS) {
             tentativas++;
             printf("Digite seu palpite %d (entre %d e %d): ", tentativas, MIN, MAX);
