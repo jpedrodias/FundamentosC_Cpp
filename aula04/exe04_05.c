@@ -23,7 +23,6 @@ int main(){
         gameOver = (numero < MIN_VALUE);
         gameOver = (numero < _MIN_VALUE);
 
-
     } while (!gameOver);
     return 0;
 }
