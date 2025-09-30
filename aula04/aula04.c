@@ -2,7 +2,7 @@
 #include <locale.h>
 #include <stdlib.h>
 
-// gcc -o myapp aula04.c -Wall -Wextra -Werror -std=c17
+// gcc -o myapp aula04.c
 // ./myapp
 
 
