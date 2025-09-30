@@ -2,6 +2,7 @@
 *.d
 
 # Compiled Object files
+myapp
 *.slo
 *.lo
 *.o
