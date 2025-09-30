@@ -5,10 +5,10 @@ Faça um programa que leia números inteiros do utilizador e calcule a soma acum
 O ciclo só termina quando o utilizador digitar o número 0.
 No fim, o programa deve mostrar a soma total.
 */
-
 #include <stdio.h>
 
-# define _ZERO 0     // não gasta RAM
+// não gasta RAM » o compilador substitui todas as ocorrências de _ZERO por 0
+# define _ZERO 0
 
 int main(){
     
@@ -23,7 +23,7 @@ int main(){
 
     } while (numero != _ZERO);
 
-    printf("A soma total é: %d\n", soma);
+    printf("A soma acumulada dos números inseridos é: %d\n", soma);
 
     return 0;
 }
