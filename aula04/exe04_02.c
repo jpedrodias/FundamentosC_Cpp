@@ -1,5 +1,5 @@
 /*
-2- Crie um programa para ler 3 notas e mostrar a média das mesmas
+2 - Crie um programa para ler 3 notas e mostrar a média das mesmas
 */
 // gcc -o myapp aula04.c
 // ./myapp

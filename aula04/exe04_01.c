@@ -1,5 +1,5 @@
 /*
-1- Crie um programa que imprima 11 vezes a frase " Hello World!" utilizando uma estrutura de repetição while.
+1 - Crie um programa que imprima 11 vezes a frase " Hello World!" utilizando uma estrutura de repetição while.
 */
 // gcc -o myapp aula04.c
 // ./myapp
