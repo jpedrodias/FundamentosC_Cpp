@@ -1,7 +1,7 @@
 #include <stdio.h> // incluir biblioteca padrão de entrada e saída
 
 /*
-1- Desenvolva um programa que permita realizar operações matemáticas simples.
+1 - Desenvolva um programa que permita realizar operações matemáticas simples.
 */
 
 // função principal
