@@ -12,29 +12,10 @@ void exemplo1(), exemplo2();
 int main(int argc, char *argv[]) {
     setlocale(LC_ALL, "Portuguese");
 
-    if (argc < 2) {
-        printf("Uso: ./myapp <número>\nEx.: ./myapp 1\n");
-        return 1;
-    }
-
-    int opcao = atoi(argv[1]);  // Converte string para int
-
-    switch (opcao) {
-        case 1:
-            exemplo1();
-            break;
-        case 2:
-            exemplo2();
-            break;
-        default:
-            printf("Default case\n");
-    }
+    exemplo1();
     
     return 0;
 }
-
-
-
 
 void exemplo1(){
 
