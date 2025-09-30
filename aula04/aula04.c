@@ -6,18 +6,18 @@
 // ./myapp
 
 
-void exemplo1(), exemplo2();
+void exemplo_while(), exemplo_doWhile();
 
 
-int main(int argc, char *argv[]) {
+int main() {
     setlocale(LC_ALL, "Portuguese");
 
-    exemplo1();
-    
+    exemplo_doWhile();
+
     return 0;
 }
 
-void exemplo1(){
+void exemplo_while() {
 
     printf("Exemplo de um ciclo while\n");
 
@@ -30,14 +30,14 @@ void exemplo1(){
 }
 
 
-void exemplo2(){
+void exemplo_doWhile() {
 
-    printf("Exemplo de um ciclo do while\n");
+    printf("Exemplo 2de um ciclo do while\n");
 
-    int i = 0;
+    int i = 10;
     do {
-        printf("Contagem: %d\n", i);
-        i++;
-    } while (i < 5);
+        printf("O valor de i: %d\n", i);
+        i--;
+    } while (i > 0);
 
-}
+} 
