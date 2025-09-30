@@ -1,6 +1,7 @@
 /*
 4 - Escreva um programa que defina um número secreto (por exemplo, 7) e peça ao utilizador para adivinhar esse número.
 O programa deve continuar a pedir um palpite até que o utilizador acerte. Quando acertar, o programa deve exibir uma mensagem de sucesso.
+PS: Ainda sem usar IFs ou do Whiles
 */
 
 #include <stdio.h>
@@ -23,6 +24,7 @@ int main(){
 
     #ifdef DEBUG_MODE
         // este bloco de código só é compilado se DEBUG_MODE estiver definido
+        // na prática, este bloco não é compilado.
         printf("Número aleatório gerado: %d\n", numeroAleatorio);
     #endif
 
