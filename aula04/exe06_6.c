@@ -37,46 +37,54 @@ int main(){
     const int MIN = _MIN;
     const int MAX = _MAX;
 
-    // Número aleatório entre MIN e MAX --- rand() não aceita argumentos
-    int numeroAleatorio = (rand() % (MAX - MIN + 1)) + MIN;
-
-    #ifdef DEBUG_MODE
-        // este bloco de código só é compilado se DEBUG_MODE estiver definido
-        // na prática, este bloco não é compilado.
-        printf("Número aleatório gerado: %d\n", numeroAleatorio);
-    #endif
-
-    int tentativas = 0;
+    char choice;
+    int numeroAleatorio;
+    int tentativas;
     int palpite;
-    bool acertou = false;
-    bool alertUser = true;
+    bool acertou;
+    bool alertUser;
 
+    do {
+        // Número aleatório entre MIN e MAX --- rand() não aceita argumentos
+        numeroAleatorio = (rand() % (MAX - MIN + 1)) + MIN;
 
-    while (!acertou && tentativas < _MAX_ATTEMPTS) {
-        tentativas++;
-        printf("Digite seu palpite %d (entre %d e %d): ", tentativas, MIN, MAX);
-        scanf("%d", &palpite);
+        #ifdef DEBUG_MODE
+            // este bloco de código só é compilado se DEBUG_MODE estiver definido
+            // na prática, este bloco não é compilado.
+            printf("Número aleatório gerado: %d\n", numeroAleatorio);
+        #endif
 
-        acertou = (palpite == numeroAleatorio);
-        alertUser = !acertou;
+        tentativas = 0;
+        acertou = false;
+        
+        while (!acertou && tentativas < _MAX_ATTEMPTS) {
+            tentativas++;
+            printf("Digite seu palpite %d (entre %d e %d): ", tentativas, MIN, MAX);
+            scanf("%d", &palpite);
 
-        while (alertUser) {
-            printf("Palpite incorreto. Tente novamente.\n");
-            alertUser = false;
+            acertou = (palpite == numeroAleatorio);
+            alertUser = !acertou;
+
+            while (alertUser) {
+                printf("Palpite incorreto. Tente novamente.\n");
+                alertUser = false;
+            }
         }
-    }
 
-    alertUser = true;
-    while (acertou && alertUser) {
-        printf("Parabéns! Você acertou o número %d em %d tentativas.\n", numeroAleatorio, tentativas);
-        alertUser = false; // sair do ciclo
-    }
+        alertUser = true;
+        while (acertou && alertUser) {
+            printf("Parabéns! Você acertou o número %d em %d tentativas.\n", numeroAleatorio, tentativas);
+            alertUser = false; // sair do ciclo
+        }
 
-    alertUser = true;
-    while (!acertou && alertUser) {
-        printf("Suas tentativas acabaram. O número era %d. Boa sorte na próxima vez!\n", numeroAleatorio);
-        alertUser = false; // sair do ciclo
-    }
+        alertUser = true;
+        while (!acertou && alertUser) {
+            printf("Suas tentativas acabaram. O número era %d. Boa sorte na próxima vez!\n", numeroAleatorio);
+            alertUser = false; // sair do ciclo
+        }
 
+        printf("Deseja jogar novamente? (s/n): ");
+        scanf(" %c", &choice);
+    } while (choice == 's' || choice == 'S');
     return 0;
 }
