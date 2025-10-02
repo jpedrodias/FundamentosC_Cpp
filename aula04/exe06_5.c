@@ -12,7 +12,7 @@ O jogo pode ser repetido várias vezes se o utilizador desejar (do...while).
 #include <stdbool.h>
 #include <time.h>
 
-#define DEBUG_MODE 1 // Ativar modo de depuração
+#define DEBUG_MODE 1 // Ativar modo de depuração » Colocar a 0 desativa a depuração.
 #define _MIN 1
 #define _MAX 100
 #define _MAX_ATTEMPTS 10

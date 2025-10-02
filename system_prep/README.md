@@ -65,8 +65,10 @@ Para um ambiente isolado e consistente, usando containers Docker dentro do VS Co
 
 ### Vídeo Tutorial
 Assista a este vídeo para ver as etapas em ação:
-- [Get Started with Dev Containers in VS Code](https://www.youtube.com/watch?v=b1RavPr_878)
-- [How to: Development Containers](https://www.youtube.com/watch?v=-0QLIodwRlk)
+- 06:58 [Get Started with Dev Containers in VS Code](https://www.youtube.com/watch?v=b1RavPr_878)
+- 17:40 [How to: Development Containers](https://www.youtube.com/watch?v=-0QLIodwRlk)
+- 30:04 [My Favorite Way To Handle Dev Environments | VS Code Devcontainers](https://www.youtube.com/watch?v=SDa3v4Quj7Y)
+
 
 
 ### Prós
