@@ -42,7 +42,6 @@ int main(){
     bool palpite_e_par;
     bool palpite_e_maior;
     
-
     do {
         // Número aleatório entre MIN e MAX --- rand() não aceita argumentos
         numeroAleatorio = (rand() % (MAX - MIN + 1)) + MIN;
