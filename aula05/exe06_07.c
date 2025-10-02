@@ -9,7 +9,7 @@ Se o palpite for ímpar, o programa indica se o número secreto também é ímpa
 Use um for para controlar o número de tentativas.
 Use um while para garantir que o palpite está entre 1 e 50.
 
-PS: Não usar IFs
+PS: Não usar IFs 
 */
 
 #include <stdio.h>
@@ -33,19 +33,20 @@ int main(){
 
     char choice;
     int numeroAleatorio;
-    int tentativas;
-    int palpite;
+    bool numeroAleatorio_e_par;
 
     bool acertou;
     bool alertUser;
 
-    bool isEven;
-    bool isOdd;
-    bool isGreater;
+    int palpite, tentativas;
+    bool palpite_e_par;
+    bool palpite_e_maior;
+    
 
     do {
         // Número aleatório entre MIN e MAX --- rand() não aceita argumentos
         numeroAleatorio = (rand() % (MAX - MIN + 1)) + MIN;
+        numeroAleatorio_e_par = (numeroAleatorio % 2 == 0);
 
         #ifdef DEBUG_MODE
             // este bloco de código só é compilado se DEBUG_MODE estiver definido
@@ -68,62 +69,51 @@ int main(){
                 printf("Palpite incorreto. Tente novamente.\n");
                 alertUser = false;
             }
-        }
-
         
-        // verificar se o número é par ou ímpar sem usar IFs
-        isEven = (palpite % 2 == 0);
-        isOdd = !isEven;
-        isGreater = (palpite > numeroAleatorio);
 
-        alertUser = true;
-        while (isEven && alertUser) {
+            // verificar se o número é par ou ímpar sem usar IFs
+            palpite_e_par = (palpite % 2 == 0);
+            palpite_e_maior = (palpite > numeroAleatorio);
+
+
             // Se o palpite for par, indicar se é maior ou menor que o número secreto
-            
             alertUser = true;
-            while (isGreater && alertUser) {
+            while (!acertou && palpite_e_par && palpite_e_maior && alertUser) {
                 printf(" O número secreto é menor que %d.\n", palpite);
                 alertUser = false;
             }
-
+        
             alertUser = true;
-            while (!isGreater && alertUser) {
+            while (!acertou &&palpite_e_par && !palpite_e_maior && alertUser) {
                 printf(" O número secreto é maior que %d.\n", palpite);
                 alertUser = false;
             }
-
-            alertUser = false;
-        }
-
-
-        alertUser = true;
-        while (isOdd && alertUser) {
 
             // Se o palpite for par, indicar AINDA se é maior ou menor que o número secreto
             alertUser = true;
-            while (isGreater && alertUser) {
-                printf(" O número secreto é menor que %d.\n", palpite);
-                alertUser = false;
-            }
-            alertUser = true;
-            while (!isGreater && alertUser) {
-                printf(" O número secreto é maior que %d.\n", palpite);
+            while (!acertou && !palpite_e_par && palpite_e_maior && alertUser) {
+                printf(" O número secreto é menor que %d.", palpite);
                 alertUser = false;
             }
 
-            
+            while (!acertou && !palpite_e_par && !palpite_e_maior && alertUser) {
+                printf(" O número secreto é maior que %d.", palpite);
+                alertUser = false;
+            }
+
+            // Se o palpite for ímpar, indicar se o número secreto é par ou ímpar
             alertUser = true;
-            while (isEven && alertUser) {
+            while (!acertou && !palpite_e_par && numeroAleatorio_e_par && alertUser) {
                 printf(" O número secreto é par.\n");
                 alertUser = false;
             }
-            while (isOdd && alertUser) {
-                printf(" O número secreto é ímpar.\n"); 
+
+            alertUser = true;
+            while (!acertou && !palpite_e_par && !numeroAleatorio_e_par && alertUser) {
+                printf(" O número secreto é ímpar.\n");
                 alertUser = false;
             }
-            alertUser = false;
-        }
-
+        } // fim do while de tentativas
 
         alertUser = true;
         while (acertou && alertUser) {
