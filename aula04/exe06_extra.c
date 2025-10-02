@@ -3,12 +3,12 @@
 
 
 /*
-Initialize total to zero.
-Ask the user to enter 5 integer numbers, add the positive numbers to the total and
-count how many negative values were entered.
-Output the total and the count value.
-YOU ARE NOT ALLOWED TO USE ARRAYS or IFS.
-The number must be between -100 and 100 and not equal to zero.
+Inicialize o total a zero.
+Peça ao utilizador para introduzir 5 números inteiros; 
+Some os números positivos ao total e conte quantos valores negativos foram introduzidos; 
+Mostre o total e a contagem;
+O número deve estar entre -100 e 100 e não pode ser zero;
+Não usar instruções if. 
 */
 
 int main() {
