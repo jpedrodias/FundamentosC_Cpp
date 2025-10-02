@@ -31,17 +31,20 @@ int main(){
     const int MIN = _MIN;
     const int MAX = _MAX;
 
-    char choice;
+    char choice; // continuar a jogar ou parar
+
     int numeroAleatorio;
-    bool numeroAleatorio_e_par;
+    bool numeroAleatorio_e_par; 
+
+    int palpite;
+    int tentativas;
+
+    bool palpite_e_par;
+    bool palpite_e_maior;
 
     bool acertou;
     bool alertUser;
 
-    int palpite, tentativas;
-    bool palpite_e_par;
-    bool palpite_e_maior;
-    
     do {
         // Número aleatório entre MIN e MAX --- rand() não aceita argumentos
         numeroAleatorio = (rand() % (MAX - MIN + 1)) + MIN;
@@ -83,7 +86,7 @@ int main(){
             }
         
             alertUser = true;
-            while (!acertou &&palpite_e_par && !palpite_e_maior && alertUser) {
+            while (!acertou && palpite_e_par && !palpite_e_maior && alertUser) {
                 printf(" O número secreto é maior que %d.\n", palpite);
                 alertUser = false;
             }
@@ -115,17 +118,19 @@ int main(){
         } // fim do while de tentativas
 
         alertUser = true;
-        while (acertou && alertUser) {
+        while ( acertou && alertUser) {
             printf("Parabéns! Você acertou o número %d em %d tentativas.\n", numeroAleatorio, tentativas);
             alertUser = false; // sair do ciclo
         }
 
         alertUser = true;
-        while (!acertou && alertUser) {
+        while ( !acertou && alertUser) {
             printf("Suas tentativas acabaram. O número era %d. Boa sorte na próxima vez!\n", numeroAleatorio);
             alertUser = false; // sair do ciclo
         }
 
+
+        // Condição de saída do MAIN LOOP - jogar novamente?
         printf("Deseja jogar novamente? (s/n): ");
         scanf(" %c", &choice);
     } while (choice == 's' || choice == 'S');
