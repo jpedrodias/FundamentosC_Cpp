@@ -29,6 +29,8 @@ int main(){
         sair = (userInput == 's' || userInput == 'S');
     }
 
+
+    // variável reciclada da etapa anterior - nome não é adequado aqui mas serve
     sair = false;
     while (!sair) {
         printf("Cronómetro parado pelo utilizador aos %d segundos.\n", segundos - 1);
