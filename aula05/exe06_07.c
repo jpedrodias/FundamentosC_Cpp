@@ -1,134 +1,45 @@
-/*
-
-Exercício 6 — Jogo do Número Par
+/* 
+Exercício 8 — Jogo do Cronómetro
 Enunciado:
-O computador escolhe um número entre 1 e 50.
-O utilizador tem 7 tentativas para acertar.
-Se o palpite for par, o programa indica apenas se é maior ou menor que o número secreto.
-Se o palpite for ímpar, o programa indica se o número secreto também é ímpar ou par.
-Use um for para controlar o número de tentativas.
-Use um while para garantir que o palpite está entre 1 e 50.
-
-PS: Não usar IFs 
+Escreva um programa que simule um cronómetro que conta segundos até 10.
+O utilizador pode a qualquer momento introduzir o número 0 para parar o cronómetro.
+Use um for para contar de 1 até 10.
+Use um while dentro do for para perguntar se o utilizador quer continuar a contagem ou parar.
 */
+
 
 #include <stdio.h>
 #include <stdbool.h>
 
-#include <stdlib.h>  // Para rand() e srand()
-#include <time.h>    // Para time()
-
-
-#define DEBUG_MODE 1 // Ativar modo de depuração
-#define _MIN 1
-#define _MAX 50
-#define _MAX_ATTEMPTS 7
-
 
 int main(){
-    srand(time(NULL)); // SEED - inicializa o gerador de números aleatórios
+    int segundos;
+    char userInput;
+    bool sair;
 
-    const int MIN = _MIN;
-    const int MAX = _MAX;
+    sair = false;
+    for (segundos = 1; segundos <= 10 && !sair; segundos++) {
+        printf("%d\n", segundos);
 
-    char choice;
-    int numeroAleatorio;
-    bool numeroAleatorio_e_par;
-
-    bool acertou;
-    bool alertUser;
-
-    int palpite, tentativas;
-    bool palpite_e_par;
-    bool palpite_e_maior;
-    
-
-    do {
-        // Número aleatório entre MIN e MAX --- rand() não aceita argumentos
-        numeroAleatorio = (rand() % (MAX - MIN + 1)) + MIN;
-        numeroAleatorio_e_par = (numeroAleatorio % 2 == 0);
-
-        #ifdef DEBUG_MODE
-            // este bloco de código só é compilado se DEBUG_MODE estiver definido
-            // na prática, este bloco não é compilado.
-            printf("Número aleatório gerado: %d\n", numeroAleatorio);
-        #endif
-
-        tentativas = 0;
-        acertou = false;
-
-        while (!acertou && tentativas < _MAX_ATTEMPTS) {
-            tentativas++;
-            printf("Digite seu palpite %d (entre %d e %d): ", tentativas, MIN, MAX);
-            scanf("%d", &palpite);
-
-            acertou = (palpite == numeroAleatorio);
-            alertUser = !acertou;
-
-            while (alertUser) {
-                printf("Palpite incorreto. Tente novamente.\n");
-                alertUser = false;
-            }
-        
-
-            // verificar se o número é par ou ímpar sem usar IFs
-            palpite_e_par = (palpite % 2 == 0);
-            palpite_e_maior = (palpite > numeroAleatorio);
-
-
-            // Se o palpite for par, indicar se é maior ou menor que o número secreto
-            alertUser = true;
-            while (!acertou && palpite_e_par && palpite_e_maior && alertUser) {
-                printf(" O número secreto é menor que %d.\n", palpite);
-                alertUser = false;
-            }
-        
-            alertUser = true;
-            while (!acertou &&palpite_e_par && !palpite_e_maior && alertUser) {
-                printf(" O número secreto é maior que %d.\n", palpite);
-                alertUser = false;
-            }
-
-            // Se o palpite for par, indicar AINDA se é maior ou menor que o número secreto
-            alertUser = true;
-            while (!acertou && !palpite_e_par && palpite_e_maior && alertUser) {
-                printf(" O número secreto é menor que %d.", palpite);
-                alertUser = false;
-            }
-
-            while (!acertou && !palpite_e_par && !palpite_e_maior && alertUser) {
-                printf(" O número secreto é maior que %d.", palpite);
-                alertUser = false;
-            }
-
-            // Se o palpite for ímpar, indicar se o número secreto é par ou ímpar
-            alertUser = true;
-            while (!acertou && !palpite_e_par && numeroAleatorio_e_par && alertUser) {
-                printf(" O número secreto é par.\n");
-                alertUser = false;
-            }
-
-            alertUser = true;
-            while (!acertou && !palpite_e_par && !numeroAleatorio_e_par && alertUser) {
-                printf(" O número secreto é ímpar.\n");
-                alertUser = false;
-            }
-        } // fim do while de tentativas
-
-        alertUser = true;
-        while (acertou && alertUser) {
-            printf("Parabéns! Você acertou o número %d em %d tentativas.\n", numeroAleatorio, tentativas);
-            alertUser = false; // sair do ciclo
+        userInput = '?';
+        while (userInput=='?') {
+            printf("Quer parar o cronómetro? (S) ");
+            scanf(" %c", &userInput);
         }
+        sair = (userInput == 's' || userInput == 'S');
+    }
 
-        alertUser = true;
-        while (!acertou && alertUser) {
-            printf("Suas tentativas acabaram. O número era %d. Boa sorte na próxima vez!\n", numeroAleatorio);
-            alertUser = false; // sair do ciclo
-        }
+    sair = false;
+    while (!sair) {
+        printf("Cronómetro parado pelo utilizador aos %d segundos.\n", segundos - 1);
+        sair = true;
+    }
 
-        printf("Deseja jogar novamente? (s/n): ");
-        scanf(" %c", &choice);
-    } while (choice == 's' || choice == 'S');
+    sair = false;
+    while (!sair) {
+        printf("Cronómetro chegou a 10 segundos.\n");
+        sair = true;    
+    }
+
     return 0;
 }

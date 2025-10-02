@@ -6,51 +6,59 @@ Um for controla o número de tentativas.
 Dentro dele, um while garante que o utilizador só pode inserir números dentro do intervalo [1, 100].
 O jogo pode ser repetido várias vezes se o utilizador desejar (do...while).
 
+ATENÇÃO: 
+•	Usar a biblioteca time.h (Esta biblioteca contém funções relacionadas com data e tempo.)
+•	Usar a função srand(time(NULL)); a função rand() gera números pseudoaleatórios.
+
 */
 
 #include <stdio.h>
 #include <stdbool.h>
-#include <time.h>
 
-#define DEBUG_MODE 1 // Ativar modo de depuração » Colocar a 0 desativa a depuração.
+// Gerador de números aleatórios
+#include <stdlib.h>  // Para rand() e srand()
+#include <time.h>    // Para time()
+
+#define DEBUG_MODE 1 // Ativar modo de depuração
 #define _MIN 1
 #define _MAX 100
 #define _MAX_ATTEMPTS 10
 
-int main()
-{
+int main(){
+    srand(time(NULL)); // SEED - inicializa o gerador de números aleatórios
+
     const int MIN = _MIN;
     const int MAX = _MAX;
-    long epoch;
+
     char choice;
-    int numeroQuaseAleatorio;
+    int numeroAleatorio;
+    int tentativas;
+    int palpite;
+    bool acertou;
+    bool alertUser;
 
     do {
-
-        epoch = time(NULL);
-        int numeroQuaseAleatorio = epoch % (MAX - MIN + 1) + MIN;
+        // Número aleatório entre MIN e MAX --- rand() não aceita argumentos
+        numeroAleatorio = (rand() % (MAX - MIN + 1)) + MIN;
 
         #ifdef DEBUG_MODE
-                // este bloco de código só é compilado se DEBUG_MODE estiver definido
-                // na prática, este bloco não é compilado.
-                printf("Número secreto é: %d\n", numeroQuaseAleatorio);
+            // este bloco de código só é compilado se DEBUG_MODE estiver definido
+            // na prática, este bloco não é compilado.
+            printf("Número aleatório gerado: %d\n", numeroAleatorio);
         #endif
 
-        int tentativas = 0;
-        int palpite;
-        bool acertou = false;
-        bool alertUser = true;
+        tentativas = 0;
+        acertou = false;
 
         while (!acertou && tentativas < _MAX_ATTEMPTS) {
             tentativas++;
             printf("Digite seu palpite %d (entre %d e %d): ", tentativas, MIN, MAX);
             scanf("%d", &palpite);
 
-            acertou = (palpite == numeroQuaseAleatorio);
+            acertou = (palpite == numeroAleatorio);
             alertUser = !acertou;
 
-            while (alertUser)
-            {
+            while (alertUser) {
                 printf("Palpite incorreto. Tente novamente.\n");
                 alertUser = false;
             }
@@ -58,19 +66,18 @@ int main()
 
         alertUser = true;
         while (acertou && alertUser) {
-            printf("Parabéns! Você acertou o número %d em %d tentativas.\n", numeroQuaseAleatorio, tentativas);
+            printf("Parabéns! Você acertou o número %d em %d tentativas.\n", numeroAleatorio, tentativas);
             alertUser = false; // sair do ciclo
         }
 
         alertUser = true;
         while (!acertou && alertUser) {
-            printf("Suas tentativas acabaram. O número era %d. Boa sorte na próxima vez!\n", numeroQuaseAleatorio);
+            printf("Suas tentativas acabaram. O número era %d. Boa sorte na próxima vez!\n", numeroAleatorio);
             alertUser = false; // sair do ciclo
         }
 
         printf("Deseja jogar novamente? (s/n): ");
         scanf(" %c", &choice);
-    } while (choice == 's' || choice == 'S'); // repetir o jogo enquanto o usuário quiser
-
+    } while (choice == 's' || choice == 'S');
     return 0;
 }
