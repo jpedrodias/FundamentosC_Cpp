@@ -60,3 +60,9 @@ Fundamentos em Programação em C/C++
 
 ## Objectivos Gerais:
 * Conceber programas em linguagem C/C++.
+
+
+## Sugestões de Livros
+* [Essentials - Learn to Code with C](https://magazine.raspberrypi.com/books/essentials-c-v1)
+* [Modern C](https://freecomputerbooks.com/Modern-C-by-Jens-Gustedt.html)
+* [The C Book](https://github.com/wardvanwanrooij/thecbook/releases/tag/20230622)
