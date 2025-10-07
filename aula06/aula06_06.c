@@ -28,9 +28,9 @@ int main() {
     if (letra == 'a' || letra == 'e' || letra == 'i' || letra == 'o' || letra == 'u') {
         printf("A letra %c é uma vogal.\n", letra);
 
-    } else if (letra >= 'b' && letra <= 'z') {
+    } else if (letra >= 'a' && letra <= 'z') {
         printf("A letra %c é uma consoante.\n", letra);
-        
+
     } else {
         printf("O caractere %c não é uma letra.\n", letra);
     }

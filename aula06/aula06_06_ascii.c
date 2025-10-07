@@ -18,7 +18,7 @@ letra = tolower(letra); // Converte para minúscula
 
 int main() {
     setlocale(LC_ALL, "Portuguese"); // incluido em locale.h para suportar acentuação
-    
+
     char letra;
     int ascii;
 
@@ -34,11 +34,11 @@ int main() {
 
     } while (ascii < 97 || ascii > 122);
 
-    
+    letra = tolower(letra);
     if (ascii == 97 || ascii == 101 || ascii == 105 || ascii == 111 || ascii == 117) {
         printf("A letra %c é uma vogal.\n", letra);
 
-    } else if (ascii >= 98 && ascii <= 122) {
+    } else if (ascii >= 97 && ascii <= 122) {
         printf("A letra %c é uma consoante.\n", letra);
 
     } else {
