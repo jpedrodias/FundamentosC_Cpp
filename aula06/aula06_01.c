@@ -12,6 +12,7 @@ a. Idade >= 67 --- idade para a reforma.
 #define _IDADE_MIN 0
 #define _IDADE_MAX 120
 
+
 int main() {
     setlocale(LC_ALL, "Portuguese"); // incluido em locale.h para suportar acentuação
 
@@ -19,8 +20,7 @@ int main() {
     int idade;
     bool idadeValida = false;
 
-    do {
-        
+    do {  
         printf("Qual a sua idade? \n");
         scanf("%i", &idade);
 
@@ -28,8 +28,8 @@ int main() {
         if (!idadeValida) {
             printf("Idade inválida. Por favor, insira uma idade entre 0 e 120.\n");
         }
-
-    } while (!idadeValida);
+        
+    } while (!idadeValida); // fim do input e da validação da idade
 
     if (idade >= _IDADE_REFORMA) {
         printf("Tem idade para se reformar.\n");
