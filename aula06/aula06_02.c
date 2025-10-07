@@ -14,7 +14,7 @@ int main(){
     int nota;
     bool notaValida = false;
 
-    do {
+    while (!notaValida) {
         printf("Insira a nota (0-20): ");
         scanf("%d", &nota);
 
@@ -22,8 +22,7 @@ int main(){
         if (!notaValida) {
             printf("Nota inválida. Por favor, insira uma nota entre 0 e 20.\n");    
         }
-    } while (!notaValida); // fim do input e da validação da nota
-
+    }  // fim do input e da validação da nota
 
     if (nota <= 4) {
         printf("Fraco\n");
