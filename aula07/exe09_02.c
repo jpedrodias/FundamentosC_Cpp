@@ -18,9 +18,9 @@ Números ímpares: 6
 int main() {
     int count_number = 0, number;
     int count_par = 0, count_impar = 0;
-    
+
     while (count_number < 10) {
-        printf("Insira um número: ");
+        printf("Insira o número %d: ", count_number + 1);
         scanf("%d", &number);
 
         if (number % 2 == 0) {
@@ -31,6 +31,7 @@ int main() {
         count_number++;
     }
 
+    printf("\nContagem final:\n");
     printf("Números pares: %d\n", count_par);
     printf("Números ímpares: %d\n", count_impar);
 
