@@ -17,7 +17,6 @@ Use:
 #include <stdbool.h>
 
 
-int get_choice_from_menu();
 void do_choice_1(), do_choice_2(), do_choice_3();
 
 
@@ -25,7 +24,14 @@ int main() {
     int choice;
     do {
 
-        choice = get_choice_from_menu();        
+        printf("\n===== MENU =====\n");
+        printf("1 - Somar dois números\n");
+        printf("2 - Calcular média de 3 números\n");
+        printf("3 - Verificar se número é positivo ou negativo\n");
+        printf("0 - Sair\n");
+        printf("================\n");
+        printf("Opção: ");
+        scanf("%d", &choice);       
         
         switch (choice) {
             case 1: { do_choice_1(); break; }
@@ -39,21 +45,6 @@ int main() {
 
     return 0;
 } 
-
-
-int get_choice_from_menu() {
-    int choice;
-
-    printf("\n===== MENU =====\n");
-    printf("1 - Somar dois números\n");
-    printf("2 - Calcular média de 3 números\n");
-    printf("3 - Verificar se número é positivo ou negativo\n");
-    printf("0 - Sair\n");
-    printf("================\n");
-    printf("Opção: ");
-    scanf("%d", &choice);
-    return choice;
-}
 
 
 void do_choice_1() {
