@@ -16,24 +16,24 @@ Números ímpares: 6
 #include <stdbool.h>
 
 int main() {
-    int count_number = 0, number;
-    int count_par = 0, count_impar = 0;
+    int numero_i = 0, numero;
+    int contador_de_pares = 0, contador_de_impares = 0;
 
-    while (count_number < 10) {
-        printf("Insira o número %d: ", count_number + 1);
-        scanf("%d", &number);
+    while (numero_i < 10) {
+        printf("Insira o número %d: ", numero_i + 1);
+        scanf("%d", &numero);
 
-        if (number % 2 == 0) {
-            count_par++;
+        if (numero % 2 == 0) {
+            contador_de_pares++;
         } else {
-            count_impar++;
+            contador_de_impares++;
         }
-        count_number++;
+        numero_i++;
     }
 
     printf("\nContagem final:\n");
-    printf("Números pares: %d\n", count_par);
-    printf("Números ímpares: %d\n", count_impar);
+    printf("Números pares: %d\n", contador_de_pares);
+    printf("Números ímpares: %d\n", contador_de_impares);
 
     return 0;
 }
