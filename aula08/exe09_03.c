@@ -20,6 +20,7 @@ Use:
 void faz_escolha_1(), faz_escolha_2(), faz_escolha_3();
 int faz_menu();
 
+
 int main() {
     int choice;
     do {
@@ -39,6 +40,7 @@ int main() {
     return 0;
 } 
 
+
 int faz_menu() {
     int choice;
     printf("╔═════════════════════════════════╦══════════════════╗\n");
@@ -51,6 +53,8 @@ int faz_menu() {
     scanf("%d", &choice);
     return choice;
 }
+
+
 void faz_escolha_1() {
     float a, b;
     printf("Insira dois números para somar:\n");
@@ -66,6 +70,7 @@ void faz_escolha_2() {
     media = (x + y + z) / 3;
     printf("Média: %.2f\n", media);
 }
+
 
 void faz_escolha_3() {
     int num;
