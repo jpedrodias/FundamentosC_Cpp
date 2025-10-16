@@ -28,7 +28,7 @@ Levantamento: -50
 
 #include <stdio.h>
 #include <stdbool.h>
-#define TAMANHO_DO_HISTÓRICO 10
+#define TAMANHO_DO_HISTÓRICO 5 // tamanho do histórico de operações
 
 int faz_menu();
 int ler_inteiro_no_intervalo(int minimo, int maximo, const char* mensagem);
@@ -38,7 +38,7 @@ int main() {
 
 
     // Gestão do histórico -para gestão do historico mas com limites de n movimentos
-    char labels[][20] = {
+    char labels[][10] = {
         "Depósito",
         "Levanta."
     };
@@ -49,8 +49,8 @@ int main() {
     int historico_texto[TAMANHO_DO_HISTÓRICO]; // 0 ou 1 para os tipos de movimento
     float historico_valor_do_movimento[TAMANHO_DO_HISTÓRICO] = {0.0};
     float historico_valor_do_saldo[TAMANHO_DO_HISTÓRICO] = {0.0};
-    int historico_movimentos = -1; // para usar como contador ciclico
-    int historico_index = -1; // para usar como índice do histórico
+    int historico_movimentos = -1; // total de movimentos realizados
+    int historico_index = -1;      // para usar como índice do histórico (módulo de TAMANHO_DO_HISTÓRICO)
     // Fim da Gestão do histórico
 
     float saldo = 0.0; // saldo do cliente
@@ -73,17 +73,18 @@ int main() {
                 historico_texto[historico_index] = CODIDO_OPERACAO_DEPOSITO; // 0 para depósito » 1 será para levantamento
                 historico_valor_do_movimento[historico_index] = valor;
                 historico_valor_do_saldo[historico_index] = saldo;
-                break;
 
+                break;
             }
+
             case 2: { 
                 valor = ler_inteiro_no_intervalo(1, 10000, "Insira o valor a levantar: ");
                 if (valor > saldo) {
                     printf("Saldo insuficiente. Operação cancelada.\n");
-                } else {
-                    saldo -= valor;
+                    break;
                 }
-
+                saldo -= valor;
+                
                 // GESTÃO DO HISTÓRICO
                 historico_movimentos++;
                 historico_index = historico_movimentos % TAMANHO_DO_HISTÓRICO;
@@ -94,35 +95,38 @@ int main() {
 
                 break;
             }
-            case 3: { 
-                printf("Saldo atual: %.2f\n", saldo); 
-                break;
 
+            case 3: { 
+                printf("Saldo atual: %.2f\n", saldo);
+
+                break;
             }
+            
             case 4: { 
                 printf("Histórico de operações:\n");
 
-                /* calcular número de entradas válidas */
+                // calcular número de entradas válidas
                 int count = (historico_movimentos >= 0) ? (historico_movimentos + 1) : 0;
-                if (count > TAMANHO_DO_HISTÓRICO) count = TAMANHO_DO_HISTÓRICO;
+                if (count > TAMANHO_DO_HISTÓRICO) {count = TAMANHO_DO_HISTÓRICO;}
 
                 if (count == 0) {
                     printf("Sem operações no histórico.\n");
+                    
                     break;
                 }
 
-                /* índice da entrada mais antiga */
+                // índice da entrada mais antiga
                 int start;
                 if (count < TAMANHO_DO_HISTÓRICO) {
-                    start = 0; /* ainda não encheu o buffer, começa em 0 */
+                    start = 0; // ainda não encheu o buffer, começa em 0
                 } else {
-                    /* encheu/rodou o buffer: a entrada mais antiga é a seguinte ao último inserido */
+                    // encheu/rodou o buffer: a entrada mais antiga é a seguinte ao último inserido
                     start = (historico_movimentos + 1) % TAMANHO_DO_HISTÓRICO;
                 }
 
                 for (int j = 0; j < count; j++) {
                     int idx = (start + j) % TAMANHO_DO_HISTÓRICO;
-                    printf("%2d - %s: %8.2f | Saldo: %.2f\n",
+                    printf("%2d - %s: %8.2f€ | Saldo atual: %8.2f€\n",
                         j + 1,
                         labels[historico_texto[idx]],
                         historico_valor_do_movimento[idx],
@@ -131,6 +135,7 @@ int main() {
                 }
                 break;
             }
+
             case 0: break;
             default: printf("Opção inválida. Tente novamente.\n"); 
         }
