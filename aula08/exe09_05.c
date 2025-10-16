@@ -34,7 +34,7 @@ int main(){
 
     // PARTE 2: Ler as notas dos alunos e contar aprovados/reprovados
     for (int i = 0; i < número_de_alunos; i++) {
-        printf("\nAluno %d:\n", i + 1);
+        printf("\nAluno %d de %d:\n", i + 1, número_de_alunos);
 
         int nota = ler_inteiro_no_intervalo(0, 20, "Insira a nota (0-20): ");
         
@@ -81,6 +81,7 @@ int main(){
 
 
 int ler_inteiro_no_intervalo(int minimo, int maximo, const char* mensagem) {
+
     int valor;
     do {
         printf("%s", mensagem);
@@ -90,4 +91,5 @@ int ler_inteiro_no_intervalo(int minimo, int maximo, const char* mensagem) {
         }
     } while (valor < minimo || valor > maximo);
     return valor;
+
 }   
