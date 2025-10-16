@@ -1,0 +1,86 @@
+/*
+Exercício 3 — Menu de Cálculos Repetidos
+Crie um programa que mostre o seguinte menu e permita repetir até o utilizador escolher sair:
+===== MENU =====
+1 - Somar dois números
+2 - Calcular média de 3 números
+3 - Verificar se número é positivo ou negativo
+0 - Sair
+================
+Use:
+- Um ciclo do...while para manter o menu ativo.
+- Um switch case para tratar cada opção.
+- if para verificar condições (ex.: número positivo/negativo).
+*/
+
+#include <stdio.h>
+#include <stdbool.h>
+
+
+int get_choice_from_menu();
+void do_choice_1(), do_choice_2(), do_choice_3();
+
+
+int main() {
+    int choice;
+    do {
+
+        choice = get_choice_from_menu();        
+        
+        switch (choice) {
+            case 1: { do_choice_1(); break; }
+            case 2: { do_choice_2(); break; }
+            case 3: { do_choice_3(); break; }
+            case 0: break;
+            default: printf("Opção inválida. Tente novamente.\n"); 
+        }
+
+    } while (choice != 0);
+
+    return 0;
+} 
+
+
+int get_choice_from_menu() {
+    int choice;
+
+    printf("\n===== MENU =====\n");
+    printf("1 - Somar dois números\n");
+    printf("2 - Calcular média de 3 números\n");
+    printf("3 - Verificar se número é positivo ou negativo\n");
+    printf("0 - Sair\n");
+    printf("================\n");
+    printf("Opção: ");
+    scanf("%d", &choice);
+    return choice;
+}
+
+
+void do_choice_1() {
+    float a, b;
+    printf("Insira dois números para somar:\n");
+    scanf("%f %f", &a, &b);
+    printf("Resultado: %.2f + %.2f = %.2f\n", a, b, a + b);
+}
+
+
+void do_choice_2() {
+    float x, y, z, media;
+    printf("Insira três números para calcular a média:\n");
+    scanf("%f %f %f", &x, &y, &z);
+    media = (x + y + z) / 3;
+    printf("Média: %.2f\n", media);
+}
+
+void do_choice_3() {
+    int num;
+    printf("Insira um número para verificar se é positivo ou negativo: ");
+    scanf("%d", &num);
+    if (num > 0) {
+        printf("O número %d é positivo.\n", num);
+    } else if (num < 0) {
+        printf("O número %d é negativo.\n", num);
+    } else {
+        printf("O número é zero.\n");
+    }
+}

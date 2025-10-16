@@ -11,11 +11,11 @@ Números pares: 4
 Números ímpares: 6
 */
 
-
 #include <stdio.h>
 #include <stdbool.h>
 
 int main() {
+    
     int numero_i = 0, numero;
     int contador_de_pares = 0, contador_de_impares = 0;
 
