@@ -42,10 +42,19 @@ int main() {
         }
 
         switch (choice) {
-            case 1: { gera_pares(n); break; }
+            case 1: { 
+                gera_pares(n); break; 
+            }
             //case 2: { gera_fibonacci(n); break; }
-            case 2: { gera_fibonacci_recursivamente(n, 0, 1); break; }
-            case 3: { soma_impares(n); break; }
+
+            case 2: { 
+                gera_fibonacci_recursivamente(n, 0, 1); break; 
+            }
+            
+            case 3: { 
+                soma_impares(n); break; 
+            }
+            
             case 0: break;
             default: printf("Opção inválida. Tente novamente.\n"); 
         }
