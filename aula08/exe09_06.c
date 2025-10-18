@@ -28,31 +28,44 @@ Levantamento: -50
 
 #include <stdio.h>
 #include <stdbool.h>
+#include <locale.h>
+
 #define TAMANHO_DO_HISTÓRICO 5 // tamanho do histórico de operações
 
-int faz_menu();
+#define LIMITE_MÁXIMO_POR_MOVIMENTO 400 // limite máximo de movimento por transação
+#define LIMITE_MÍNIMO_POR_MOVIMENTO 1   // limite mínimo de movimento por transação
+#define SALDO_AUTORIZADO_INICIAL -10.0  // saldo autorizado inicial (a descoberto)
+
+
 int ler_inteiro_no_intervalo(int minimo, int maximo, const char* mensagem);
 
+int faz_menu();
+void mostrar_saldo(float saldo, float saldo_autorizado);
+int ajustar_novo_saldo_autorizado(float saldo_atual, float saldo_autorizado_atual);
+
+void pausa(void); // faz uma pausa até o utilizador premir Enter
 
 int main() {
-
+    setlocale(LC_ALL, "Portuguese"); // Definir a localidade para suportar caracteres especiais
 
     // Gestão do histórico -para gestão do historico mas com limites de n movimentos
-    char labels[][10] = {
-        "Depósito",
-        "Levanta."
+    const char *historico_textos[] = {
+        "Depósi.",
+        "Levant.",
+        "Saldo  ",
+        "Histór."
     };
-
-    const int CODIDO_OPERACAO_DEPOSITO = 0;
-    const int CODIDO_OPERACAO_LEVANTAMENTO = 1;
     
+    // Gestão do histórico com um esquema de arrays paralelos
     int historico_texto[TAMANHO_DO_HISTÓRICO]; // 0 ou 1 para os tipos de movimento
     float historico_valor_do_movimento[TAMANHO_DO_HISTÓRICO] = {0.0};
     float historico_valor_do_saldo[TAMANHO_DO_HISTÓRICO] = {0.0};
+
     int historico_movimentos = -1; // total de movimentos realizados
     int historico_index = -1;      // para usar como índice do histórico (módulo de TAMANHO_DO_HISTÓRICO)
     // Fim da Gestão do histórico
 
+    float saldo_autorizado = SALDO_AUTORIZADO_INICIAL; // saldo autorizado é o valor mínimo que o cliente pode ter (a descoberto)
     float saldo = 0.0; // saldo do cliente
     float valor = 0.0; // valor da transação
 
@@ -63,25 +76,30 @@ int main() {
         
         switch (choice) {
             case 1: { 
-                valor = ler_inteiro_no_intervalo(1, 10000, "Insira o valor a depositar: ");
+                valor = ler_inteiro_no_intervalo(LIMITE_MÍNIMO_POR_MOVIMENTO, LIMITE_MÁXIMO_POR_MOVIMENTO * 100, "Insira o valor a depositar: ");
                 saldo += valor;
+
+                saldo_autorizado = ajustar_novo_saldo_autorizado(saldo, saldo_autorizado);
 
                 // GESTÃO DO HISTÓRICO
                 historico_movimentos++;
-                historico_index = historico_movimentos % TAMANHO_DO_HISTÓRICO;
+                historico_index = historico_movimentos % TAMANHO_DO_HISTÓRICO; 
 
-                historico_texto[historico_index] = CODIDO_OPERACAO_DEPOSITO; // 0 para depósito » 1 será para levantamento
-                historico_valor_do_movimento[historico_index] = valor;
                 historico_valor_do_saldo[historico_index] = saldo;
+                historico_valor_do_movimento[historico_index] = valor;
+                historico_texto[historico_index] = choice - 1; // ACERTO do índice do array: 0 para depósito » 1 será para levantamento
+                // FIM DA GESTÃO DO HISTÓRICO
 
+                mostrar_saldo(saldo, saldo_autorizado);
+                pausa();
                 break;
             }
 
-            case 2: { 
-                valor = ler_inteiro_no_intervalo(1, 10000, "Insira o valor a levantar: ");
-                if (valor > saldo) {
+            case 2: {
+                valor = ler_inteiro_no_intervalo(LIMITE_MÍNIMO_POR_MOVIMENTO, LIMITE_MÁXIMO_POR_MOVIMENTO, "Insira o valor a levantar: ");
+                if (saldo - valor < saldo_autorizado) {
                     printf("Saldo insuficiente. Operação cancelada.\n");
-                    break;
+                    break; // sair do switch case
                 }
                 saldo -= valor;
                 
@@ -89,61 +107,107 @@ int main() {
                 historico_movimentos++;
                 historico_index = historico_movimentos % TAMANHO_DO_HISTÓRICO;
 
-                historico_texto[historico_index] = CODIDO_OPERACAO_LEVANTAMENTO; // 0 para depósito » 1 será para levantamento
-                historico_valor_do_movimento[historico_index] = -valor;
                 historico_valor_do_saldo[historico_index] = saldo;
+                historico_texto[historico_index] = choice - 1;    // 0 para depósito » 1 será para levantamento
+                historico_valor_do_movimento[historico_index] = -valor;
+                // FIM DA GESTÃO DO HISTÓRICO
 
+                mostrar_saldo(saldo, saldo_autorizado);
+                pausa();
                 break;
             }
 
             case 3: { 
-                printf("Saldo atual: %.2f\n", saldo);
-
+                mostrar_saldo(saldo, saldo_autorizado);
+                pausa();
                 break;
             }
             
             case 4: { 
                 printf("Histórico de operações:\n");
 
-                // calcular número de entradas válidas
-                int count = (historico_movimentos >= 0) ? (historico_movimentos + 1) : 0;
-                if (count > TAMANHO_DO_HISTÓRICO) {count = TAMANHO_DO_HISTÓRICO;}
-
-                if (count == 0) {
+                if (historico_movimentos < 0) {
                     printf("Sem operações no histórico.\n");
-                    
                     break;
                 }
 
-                // índice da entrada mais antiga
-                int start;
-                if (count < TAMANHO_DO_HISTÓRICO) {
-                    start = 0; // ainda não encheu o buffer, começa em 0
-                } else {
-                    // encheu/rodou o buffer: a entrada mais antiga é a seguinte ao último inserido
-                    start = (historico_movimentos + 1) % TAMANHO_DO_HISTÓRICO;
+                /* número de entradas válidas (histórico_movimentos conta desde 0) */
+                int entradas_validas = historico_movimentos + 1;
+                if (entradas_validas > TAMANHO_DO_HISTÓRICO) {
+                    entradas_validas = TAMANHO_DO_HISTÓRICO;
                 }
 
-                for (int j = 0; j < count; j++) {
-                    int idx = (start + j) % TAMANHO_DO_HISTÓRICO;
-                    printf("%2d - %s: %8.2f€ | Saldo atual: %8.2f€\n",
+                /* índice da entrada mais antiga no buffer circular */
+                int start_idx;
+                if (entradas_validas < TAMANHO_DO_HISTÓRICO) {
+                    start_idx = 0; /* buffer ainda não cheio */
+                } else {
+                    /* buffer cheio: a entrada mais antiga é a seguinte ao último escrito */
+                    start_idx = (historico_index + 1) % TAMANHO_DO_HISTÓRICO;
+                }
+
+                /* índice da entrada mais recente (opcional, só para referência) */
+                int end_idx = (start_idx + entradas_validas - 1) % TAMANHO_DO_HISTÓRICO;
+
+                printf("╔══════════════════════════════════╦═══╗\n");
+                printf("║ * EISnt Internacional Bank *     ║ € ║\n");
+                printf("╠═══╦═════════╦═══════════╦════════╩═══╣\n");
+                printf("║ # ║ Tipo    ║ Valor:    ║ Saldo:     ║\n");
+                printf("╠═══╬═════════╬═══════════╬════════════╣\n");
+
+                for (int j = 0; j < entradas_validas; j++) {
+                    int idx = (start_idx + j) % TAMANHO_DO_HISTÓRICO;
+
+                    int hist_tipo_i = historico_texto[idx];
+                    const char *hist_tipo_str = historico_textos[hist_tipo_i];
+                    
+                    float hist_valor = historico_valor_do_movimento[idx];
+                    float hist_saldo = historico_valor_do_saldo[idx];
+
+                    printf("║%2d ║ %s ║ %8.2f€ ║ %9.2f€ ║\n",
                         j + 1,
-                        labels[historico_texto[idx]],
-                        historico_valor_do_movimento[idx],
-                        historico_valor_do_saldo[idx]
+                        hist_tipo_str,
+                        hist_valor,
+                        hist_saldo
                     );
                 }
+                printf("╚═══╩═════════╩═══════════╩════════════╝\n");
+                pausa();
                 break;
             }
 
-            case 0: break;
-            default: printf("Opção inválida. Tente novamente.\n"); 
+            case 0: 
+                break;
+            default: 
+                printf("Opção inválida. Tente novamente.\n"); 
         }
 
     } while (choice != 0);
 
     return 0;
-}
+} // fim main
+
+
+
+
+void pausa(void) {
+    /* Esta função foi criada usando ChatGPT"
+        Pausa: só com scanf — espera pelo Enter do utilizador.
+        Nota: isto não detecta uma tecla única sem Enter; scanf só fornece input após Enter. 
+    */
+    
+    /* limpar eventual resto da linha (consome até ao '\n', se houver) */
+    (void)scanf("%*[^\n]"); /* descarta caracteres até ao newline (se existirem) */
+    (void)scanf("%*c");     /* consome o newline residual (se houver) */
+
+    /* pedir ao utilizador para premir Enter e bloquear até isso acontecer */
+    printf("Prima Enter para continuar...");
+    fflush(stdout);
+
+    (void)scanf("%*[^\n]"); /* descarta quaisquer caracteres antes do Enter inseridos agora */
+    (void)scanf("%*c");     /* consome o '\n' do Enter */
+} // fim pausa
+
 
 int faz_menu() {
     int choice;
@@ -165,7 +229,29 @@ int faz_menu() {
         }
     } while (choice < 0 || choice > 4);
     return choice;
-}
+} // fim faz_menu
+
+
+void mostrar_saldo(float saldo, float saldo_autorizado) {
+    printf("\n");
+    printf("Saldo atual: %.2f\n", saldo);
+    printf("╔══════════════════════════════════╦═══╗\n");
+    printf("║ * EISnt Internacional Bank *     ║ € ║\n");
+    printf("╠══════════════════════════════════╩═══╣\n");
+    printf("║                                      ║\n");
+    printf("║ Saldo atual: %17.2f€      ║\n", saldo);
+    printf("║                                      ║\n");
+
+    if (saldo < 0) {
+        printf("║      Atenção: Saldo negativo!        ║\n");
+    } else {
+        printf("║                                      ║\n");
+    }
+
+    printf("╠══════════════════════════════════════╣\n");
+    printf("║ Saldo autorizado: %12.2f€      ║\n", saldo_autorizado);
+    printf("╚══════════════════════════════════════╝\n");
+} // fim mostrar_saldo
 
 
 int ler_inteiro_no_intervalo(int minimo, int maximo, const char* mensagem) {
@@ -179,5 +265,28 @@ int ler_inteiro_no_intervalo(int minimo, int maximo, const char* mensagem) {
         }
     } while (valor < minimo || valor > maximo);
     return valor;
+} // fim ler_inteiro_no_intervalo
 
-}
+
+int ajustar_novo_saldo_autorizado(float saldo_atual, float saldo_autorizado_atual){
+    /* Permite que o cliente tenha valores a descoberto.
+
+    Ajusta o saldo autorizado com base no saldo máximo atingido.
+    O saldo autorizado é 10% do saldo máximo atingido, arredondado para baixo em múltiplos de 10.
+    
+    O saldo autorizado só aumenta, nunca diminui.   
+    
+    Calcular 10% do saldo atual, arredondado para baixo ao múltiplo de 10:
+       ex: 310 -> 10% = 31 -> arredondar para múltiplo de 10 inferior = 30 -> autorizado = -30
+           400 -> 10% = 40 -> autorizado = -40
+       Manter o saldo_autorizado atual se o novo for menos permissivo. */
+    int percentual_dez_por_cento_em_mult10 = ((int)saldo_atual / 100) * 10;
+    int novo_autorizado = -percentual_dez_por_cento_em_mult10;
+
+    /* Se ainda não existe autorização (por exemplo valor 0) ou novo_autorizado for mais permissivo
+       (numericamente menor, i.e., mais negativo), atualiza; caso contrário mantém o atual. */
+    if (novo_autorizado < (int)saldo_autorizado_atual) {
+        return novo_autorizado;
+    }
+    return (int)saldo_autorizado_atual;
+} // fim ajustar_novo_saldo_autorizado
