@@ -61,9 +61,9 @@ int main() {
     float historico_valor_do_movimento[TAMANHO_DO_HISTÓRICO] = {0.0};
     float historico_valor_do_saldo[TAMANHO_DO_HISTÓRICO] = {0.0};
 
-    int historico_movimentos = -1; // total de movimentos realizados
-    int historico_index = -1;      // para usar como índice do histórico (módulo de TAMANHO_DO_HISTÓRICO)
-    // Fim da Gestão do histórico
+    /* historico_movimentos passa a ser o total de movimentos já registados */
+    int historico_movimentos = 0;  /* 0 = nenhum movimento ainda */
+    int historico_index = -1;      /* último índice escrito (válido só se historico_movimentos>0) */
 
     float saldo_autorizado = SALDO_AUTORIZADO_INICIAL; // saldo autorizado é o valor mínimo que o cliente pode ter (a descoberto)
     float saldo = 0.0; // saldo do cliente
@@ -82,12 +82,12 @@ int main() {
                 saldo_autorizado = ajustar_novo_saldo_autorizado(saldo, saldo_autorizado);
 
                 // GESTÃO DO HISTÓRICO
-                historico_movimentos++;
-                historico_index = historico_movimentos % TAMANHO_DO_HISTÓRICO; 
-
+                /* usar historico_movimentos como contador: escrever em index = total % tamanho, depois incrementar total */
+                historico_index = historico_movimentos % TAMANHO_DO_HISTÓRICO;
                 historico_valor_do_saldo[historico_index] = saldo;
                 historico_valor_do_movimento[historico_index] = valor;
-                historico_texto[historico_index] = choice - 1; // ACERTO do índice do array: 0 para depósito » 1 será para levantamento
+                historico_texto[historico_index] = choice - 1; /* 0 = depósito, 1 = levantamento */
+                historico_movimentos++;
                 // FIM DA GESTÃO DO HISTÓRICO
 
                 mostrar_saldo(saldo, saldo_autorizado);
@@ -104,12 +104,11 @@ int main() {
                 saldo -= valor;
                 
                 // GESTÃO DO HISTÓRICO
-                historico_movimentos++;
                 historico_index = historico_movimentos % TAMANHO_DO_HISTÓRICO;
-
                 historico_valor_do_saldo[historico_index] = saldo;
-                historico_texto[historico_index] = choice - 1;    // 0 para depósito » 1 será para levantamento
+                historico_texto[historico_index] = choice - 1;    /* 1 = levantamento */
                 historico_valor_do_movimento[historico_index] = -valor;
+                historico_movimentos++;
                 // FIM DA GESTÃO DO HISTÓRICO
 
                 mostrar_saldo(saldo, saldo_autorizado);
@@ -126,13 +125,14 @@ int main() {
             case 4: { 
                 printf("Histórico de operações:\n");
 
-                if (historico_movimentos < 0) {
+                /* historico_movimentos é o total de movimentos registados */
+                if (historico_movimentos == 0) {
                     printf("Sem operações no histórico.\n");
                     break;
                 }
 
-                /* número de entradas válidas (histórico_movimentos conta desde 0) */
-                int entradas_validas = historico_movimentos + 1;
+                /* número de entradas válidas (limitado pelo tamanho do buffer) */
+                int entradas_validas = historico_movimentos;
                 if (entradas_validas > TAMANHO_DO_HISTÓRICO) {
                     entradas_validas = TAMANHO_DO_HISTÓRICO;
                 }
