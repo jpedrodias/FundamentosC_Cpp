@@ -13,7 +13,7 @@ deve repetir até o utilizador escolher 0 - Sair. Se a opção for inválida, mo
 inválida”.
 */
 #include <stdio.h>
-#define MAX_INT 65536 // 2^16 (bits)
+#define MAX_NUM 65536 // 2^16 (bits)
 
 
 float ler_numero_no_intervalo(int minimo, int maximo, const char* mensagem);
@@ -35,17 +35,17 @@ int main() {
 
         switch (escolha) {
             case 1:
-                numero = ler_numero_no_intervalo(-MAX_INT, MAX_INT, "Insira um número para dobrar: ");
+                numero = ler_numero_no_intervalo(-MAX_NUM, MAX_NUM, "Insira um número para dobrar: ");
                 resultado = numero * 2;
                 printf("Resultado: %.2f\n", resultado);
                 break;
             case 2:
-                numero = ler_numero_no_intervalo(-MAX_INT, MAX_INT, "Insira um número para triplicar: ");
+                numero = ler_numero_no_intervalo(-MAX_NUM, MAX_NUM, "Insira um número para triplicar: ");
                 resultado = numero * 3;
                 printf("Resultado: %.2f\n", resultado);
                 break;
             case 3:
-                numero = ler_numero_no_intervalo(-MAX_INT, MAX_INT, "Insira um número para calcular o quadrado: ");
+                numero = ler_numero_no_intervalo(-MAX_NUM, MAX_NUM, "Insira um número para calcular o quadrado: ");
                 resultado = numero * numero;
                 printf("Resultado: %.2f\n", resultado);
                 break;

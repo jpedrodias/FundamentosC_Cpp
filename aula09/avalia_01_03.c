@@ -82,5 +82,3 @@ float ler_numero_no_intervalo(int minimo, int maximo, const char* mensagem) {
     } while (valor < minimo || valor > maximo);
     return valor;
 } // fim ler_numero_no_intervalo
-
-
