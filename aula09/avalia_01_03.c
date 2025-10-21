@@ -19,14 +19,15 @@ programa termina apenas quando o utilizador escolher 0 - Sair.
 #define MAX_INT 65536 // 2^16 (bits)
 
 
-int ler_inteiro_no_intervalo(int minimo, int maximo, const char* mensagem);
+float ler_numero_no_intervalo(int minimo, int maximo, const char* mensagem);
+
 
 int main() {
     float valor_compra, valor_final;
     int escolha;
 
     printf("Introduza o valor total da compra: ");
-    valor_compra = ler_inteiro_no_intervalo(-MAX_INT, MAX_INT, "Valor da compra: ");
+    valor_compra = ler_numero_no_intervalo(-MAX_INT, MAX_INT, "Valor da compra: ");
 
     do {
         printf("\n===== MENU DE DESCONTOS =====\n");
@@ -69,17 +70,17 @@ int main() {
 
 
 
-int ler_inteiro_no_intervalo(int minimo, int maximo, const char* mensagem) {
+float ler_numero_no_intervalo(int minimo, int maximo, const char* mensagem) {
 
-    int valor;
+    float valor;
     do {
         printf("%s", mensagem);
-        scanf("%d", &valor);
+        scanf("%f", &valor);
         if (valor < minimo || valor > maximo) {
             printf("Valor inválido. O valor deve estar entre %d e %d.\n", minimo, maximo);
         }
     } while (valor < minimo || valor > maximo);
     return valor;
-} // fim ler_inteiro_no_intervalo
+} // fim ler_numero_no_intervalo
 
 

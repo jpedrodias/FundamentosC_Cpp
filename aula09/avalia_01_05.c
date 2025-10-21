@@ -8,19 +8,45 @@ Escreva um programa que vá pedindo números ao utilizador até que a soma total
 */
 
 #include <stdio.h>
+#define MAX_INT 2147483647 // 2^31 - 1 (bits)
+
+#define DEBUG_MODE 0  // definir para 1 para ativar mensagens de debug
+
+float ler_numero_no_intervalo(int minimo, int maximo, const char* mensagem);
+
 
 int main() {
-    int num, total = 0, count = 0;
+    float numero, total = 0;
+    int contador = 0;
 
+    printf("Soma até atingir limite de 100\n");
     do {
-        printf("Introduza um número: ");
-        scanf("%d", &num);
-        total += num;
-        count++;
-    } while (total <= 100);
+        numero = ler_numero_no_intervalo(-MAX_INT, MAX_INT, "Introduza um número: ");
+        total += numero;
+        contador++;
 
-    printf("Total da soma: %d\n", total);
-    printf("Quantidade de números introduzidos: %d\n", count);
+        if (DEBUG_MODE) {
+            printf("[DEBUG] Número introduzido #%d: %.1f, Soma atual: %.1f\n", contador, numero, total);
+        }
+
+    } while (total <= 100.0);
+
+    printf("Total da soma: %.1f\n", total);
+    printf("Quantidade de números introduzidos: %d\n", contador);
 
     return 0;
 }
+
+
+float ler_numero_no_intervalo(int minimo, int maximo, const char* mensagem) {
+
+    float valor;
+    do {
+        printf("%s", mensagem);
+        scanf("%f", &valor);
+        if (valor < minimo || valor > maximo) {
+            printf("Valor inválido. O valor deve estar entre %d e %d.\n", minimo, maximo);
+        }
+    } while (valor < minimo || valor > maximo);
+    return valor;
+} // fim ler_numero_no_intervalo

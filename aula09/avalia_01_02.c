@@ -12,8 +12,8 @@ Contagem: 15 11 7 3
 #include <stdio.h>
 #define MAX_INT 65536 // 2^16 (bits)
 
-
 int ler_inteiro_no_intervalo(int minimo, int maximo, const char* mensagem);
+
 
 int main() {
     int inicio, passo;

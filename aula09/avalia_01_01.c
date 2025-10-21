@@ -13,6 +13,7 @@ Divisores: 4
 
 int ler_inteiro_no_intervalo(int minimo, int maximo, const char* mensagem);
 
+
 int main() {
     int i, numero, divisores = 0;
 

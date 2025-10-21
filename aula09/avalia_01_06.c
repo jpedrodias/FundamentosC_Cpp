@@ -13,9 +13,15 @@ deve repetir até o utilizador escolher 0 - Sair. Se a opção for inválida, mo
 inválida”.
 */
 #include <stdio.h>
+#define MAX_INT 65536 // 2^16 (bits)
+
+
+float ler_numero_no_intervalo(int minimo, int maximo, const char* mensagem);
+
+
 int main() {
-    int choice;
-    float number, result;
+    int escolha;
+    float numero, resultado;
 
     do {
         printf("\n===== MENU =====\n");
@@ -25,26 +31,23 @@ int main() {
         printf("0 - Sair\n");
         printf("================\n");
         printf("Escolha uma opção: ");
-        scanf("%d", &choice);
+        scanf("%d", &escolha);
 
-        switch (choice) {
+        switch (escolha) {
             case 1:
-                printf("Insira um número para dobrar: ");
-                scanf("%f", &number);
-                result = number * 2;
-                printf("Resultado: %.2f\n", result);
+                numero = ler_numero_no_intervalo(-MAX_INT, MAX_INT, "Insira um número para dobrar: ");
+                resultado = numero * 2;
+                printf("Resultado: %.2f\n", resultado);
                 break;
             case 2:
-                printf("Insira um número para triplicar: ");
-                scanf("%f", &number);
-                result = number * 3;
-                printf("Resultado: %.2f\n", result);
+                numero = ler_numero_no_intervalo(-MAX_INT, MAX_INT, "Insira um número para triplicar: ");
+                resultado = numero * 3;
+                printf("Resultado: %.2f\n", resultado);
                 break;
             case 3:
-                printf("Insira um número para calcular o quadrado: ");
-                scanf("%f", &number);
-                result = number * number;
-                printf("Resultado: %.2f\n", result);
+                numero = ler_numero_no_intervalo(-MAX_INT, MAX_INT, "Insira um número para calcular o quadrado: ");
+                resultado = numero * numero;
+                printf("Resultado: %.2f\n", resultado);
                 break;
             case 0:
                 printf("Saindo do programa.\n");
@@ -52,7 +55,21 @@ int main() {
             default:
                 printf("Opção inválida. Tente novamente.\n");
         }
-    } while (choice != 0);
+    } while (escolha != 0);
 
     return 0;
 }
+
+
+float ler_numero_no_intervalo(int minimo, int maximo, const char* mensagem) {
+
+    float valor;
+    do {
+        printf("%s", mensagem);
+        scanf("%f", &valor);
+        if (valor < minimo || valor > maximo) {
+            printf("Valor inválido. O valor deve estar entre %d e %d.\n", minimo, maximo);
+        }
+    } while (valor < minimo || valor > maximo);
+    return valor;
+} // fim ler_numero_no_intervalo
