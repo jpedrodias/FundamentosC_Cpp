@@ -48,7 +48,7 @@ void pausa(void); // faz uma pausa até o utilizador premir Enter
 int main() {
     setlocale(LC_ALL, "Portuguese"); // Definir a localidade para suportar caracteres especiais
 
-    // Gestão do histórico -para gestão do historico mas com limites de n movimentos
+    // Gestão do histórico mas com limites de n movimentos
     const char *historico_textos[] = {
         "Depósi.",
         "Levant.",

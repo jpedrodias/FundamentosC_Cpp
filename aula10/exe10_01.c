@@ -3,6 +3,7 @@ Exercício 1:
  Escrever um programa que calcule e escreva a diferença das notas de 4 alunos relativamente à sua média, usando vetores.
 */
 #include <stdio.h>
+#include <math.h>
 
 
 int main(){
@@ -40,7 +41,7 @@ int main(){
         diferenca[i] = (float)notas[i] - media;
         printf("\tAluno %d: Diferença = %4.2f", 
             i + 1, 
-            diferenca[i]);
+            fabs(diferenca[i]));
         
 
         if (diferenca[i] > 0)      { printf(" %s", "(acima da média)"  ); } 
