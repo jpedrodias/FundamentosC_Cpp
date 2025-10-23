@@ -1,6 +1,6 @@
 /*
 Exercício 1:
- Escrever um programa que calcule e escreva a diferença das notas de 4 alunos relativamente à sua média, usando vetores.
+ Escrever um programa que calcule e escreva a diferença de várias notas de vários alunos relativamente à sua média, usando vetores.
 */
 #include <stdio.h>
 #include <math.h>
@@ -8,8 +8,8 @@ Exercício 1:
 
 int main(){
     
-    int numero_de_alunos = 2;
-    int numero_de_notas = 2;
+    int numero_de_alunos = 4;
+    int numero_de_notas = 4;
 
     int notas[numero_de_alunos][numero_de_notas]; 
     float medias[numero_de_alunos];
