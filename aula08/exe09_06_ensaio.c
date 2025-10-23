@@ -2,6 +2,7 @@
 
 int main(){
 
+    // O erro aparece se se alterar as dimessões para [2][8] 
     const char historico1[2][10] = {
         "Depósi.",
         "Levant.",

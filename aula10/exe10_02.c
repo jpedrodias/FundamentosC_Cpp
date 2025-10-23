@@ -42,11 +42,11 @@ int main() {
         }
     }
 
-    printf("%s tivemos a temperatura mais alta com %.2f\n", 
+    printf("%s tivemos a temperatura mais alta com %.1f\n", 
         dias_da_semana[temperatura_maxima_indice], 
         temperatura_maxima);
     
-    printf("%s tivemos a temperatura mais baixa com %.2f\n",
+    printf("%s tivemos a temperatura mais baixa com %.1f\n",
         dias_da_semana[temperatura_minima_indice],
         temperatura_minima);
 
