@@ -34,7 +34,7 @@ int main() {
 
     // PROCESSAMENTO
     value_de_referencia = vetor[0];
-    for (i = 1; i < 20; i++) {
+    for (i = 1; i < tamanho; i++) {
         if (vetor[i] > value_de_referencia) {
             maior++;
         } else if (vetor[i] < value_de_referencia) {
