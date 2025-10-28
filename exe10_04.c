@@ -20,11 +20,12 @@ int main() {
 
     int vetor[20];
     int value_de_referencia;
+    int tamanho = sizeof(vetor) / sizeof(vetor[0]);
 
     int i, maior = 0, menor = 0, igual = 0;
 
     // INPUTS » Lazy Mode: valores aleatórios
-    for (i = 0; i < 20; i++) {
+    for (i = 0; i < tamanho; i++) {
         // printf("Digite o valor para a posição %d: ", i);
         // scanf("%d", &vetor[i]);
         vetor[i] = random_int(valor_minimo, valor_maximo);
