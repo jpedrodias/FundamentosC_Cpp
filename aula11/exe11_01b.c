@@ -2,13 +2,14 @@
 Exercício 1
 Cria uma função maior() que recebe dois números e devolve o maior.
 */
+
 #include <stdio.h>
 
-int qual_o_maior(int valor_a, int valor_b) {
-    if (valor_a > valor_b) {
-        return valor_a;
+int qual_o_maior(int *referencia_a, int *referencia_b) {
+    if (*referencia_a > *referencia_b) {
+        return *referencia_a;
     } else {
-        return valor_b;
+        return *referencia_b;
     }
 }
 
@@ -22,7 +23,7 @@ int main() {
     printf("Digite o valor de b: ");
     scanf("%d", &numero_2);
 
-    int maior = qual_o_maior(numero_1, numero_2);
+    int maior = qual_o_maior(&numero_1, &numero_2);
 
     printf("O maior número é: %d\n", maior);
 
