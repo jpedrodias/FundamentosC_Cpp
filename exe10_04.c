@@ -11,6 +11,10 @@ no final mostre quantos elementos possuem valor maior, menor e igual ao primeiro
 #define valor_minimo 0
 #define valor_maximo 10
 
+int random_int(int min, int max) {
+    return rand() % (max - min + 1) + min;
+}
+
 int main() {
     srand(time(NULL));
 
@@ -23,7 +27,7 @@ int main() {
     for (i = 0; i < 20; i++) {
         // printf("Digite o valor para a posição %d: ", i);
         // scanf("%d", &vetor[i]);
-        vetor[i] = rand() % (valor_maximo - valor_minimo + 1) + valor_minimo;
+        vetor[i] = random_int(valor_minimo, valor_maximo);
         printf("vetor[%d] = %d\n", i, vetor[i]);
     }
 
