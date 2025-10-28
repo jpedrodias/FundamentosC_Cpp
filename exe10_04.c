@@ -8,7 +8,7 @@ no final mostre quantos elementos possuem valor maior, menor e igual ao primeiro
 #include <stdlib.h>
 #include <time.h>
 
-#define valor_minimo 0
+#define valor_minimo 1
 #define valor_maximo 10
 
 int random_int(int min, int max) {
@@ -44,9 +44,9 @@ int main() {
     }
 
     // OUTPUT
-    printf("Elementos maiores que o primeiro: %d\n", maior);
-    printf("Elementos menores que o primeiro: %d\n", menor);
-    printf("Elementos iguais ao primeiro: %d\n", igual);
+    printf("Elementos maiores: %d\n", maior);
+    printf("Elementos menores: %d\n", menor);
+    printf("Elementos iguais:  %d\n", igual);
 
     return 0;
 }
