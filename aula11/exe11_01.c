@@ -5,12 +5,14 @@ Cria uma função maior() que recebe dois números e devolve o maior.
 
 #include <stdio.h>
 
-int qual_maior(int a, int b) {
+int qual_o_maior(int a, int b) {
+    int a_devolver;
     if (a > b) {
-        return a;
+        a_devolver = a;
     } else {
-        return b;
+        a_devolver = b;
     }
+    return a_devolver;
 }
 
 
@@ -23,7 +25,7 @@ int main() {
     printf("Digite o valor de b: ");
     scanf("%d", &numero_2);
 
-    int maior = qual_maior(numero_1, numero_2);
+    int maior = qual_o_maior(numero_1, numero_2);
 
     printf("O maior número é: %d\n", maior);
 
