@@ -11,6 +11,7 @@ Objetivo: Aprender a usar ponteiros em funções para modificar variáveis exter
 
 void troca(int *x, int *y);
 
+
 int main() {
     int a = 5;
     int b = 10;
@@ -25,6 +26,10 @@ int main() {
     printf("\tNo endereço de \"a\": %p, está armazenado o valor: %d\n", &a, a);
     printf("\tNo endereço de \"b\": %p, está armazenado o valor: %d\n", &b, b);
 
+
+    printf("Endereços das funções:\n");
+    printf("A função \"troca\" está localizada no endereço: %p\n", &troca);
+    printf("A função \"main\" está localizada no endereço: %p\n", &main);
     return 0;
 }
 
