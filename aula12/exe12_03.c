@@ -15,7 +15,7 @@ int main(){
     int size = sizeof(vetor) / sizeof(vetor[0]);
 
     // 2
-    int *p = &vetor[0];
+    int *p = &vetor[0]; // Aponta para o primeiro elemento do vetor e não para o vetor
 
     // 3
     for (int i = 0; i < size; i++) {
@@ -24,9 +24,10 @@ int main(){
 
     // 4
     *(p + 2) = 99;
-    for (int i = 0; i < size + 3; i++) {
+    for (int i = 0; i < size; i++) {
         printf("Elemento %d: %d\n", i, *(p + i));
     }
 
     return 0;
 }
+
