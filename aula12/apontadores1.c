@@ -32,5 +32,5 @@ int main () {
 void aniversario(int *idade){
     //*idade = *idade + 1;
     (*idade)++;
-    printf("Dentro da função O endereço de idade é %p\n", idade);
+    printf("Dentro da função o endereço de idade é %p\n", idade);
 }
