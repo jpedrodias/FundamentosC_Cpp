@@ -16,12 +16,16 @@ int main() {
     int *p;             // Declaração do ponteiro "p"
 
     p = &a;             // Faz com que "p" aponte para "a"
-
-    printf("Valor de \"a\" antes da alteração: %d\n", a);
+    
+    printf("Antes:\n"); 
+    printf("O valor de \"a\": %d\n", a);
+    printf("O endereço de \"a\": %p\n", &a);
 
     *p = 20;            // Utiliza o ponteiro "p" para alterar o valor de "a"
 
-    printf("Valor de \"a\" depois da alteração: %d\n", a);
+    printf("Depois:\n");
+    printf("O valor de \"a\": %d\n", a);
+    printf("O endereço de \"a\": %p\n", &a);
 
     return 0;
 }
