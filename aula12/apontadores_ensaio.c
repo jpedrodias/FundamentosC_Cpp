@@ -25,6 +25,7 @@ int main () {
     // * - operador que devolve o valor guardado no endereço de memória 
 
     // aniversario
+    // idade = idade + 1
     aniversario(&idade);
     printf("O novo valor de idade é %d\n", idade);
 

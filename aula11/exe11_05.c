@@ -34,6 +34,7 @@ os dados entre funções.
 #include <stdio.h>
 #include <stdbool.h>
 
+
 int escolher_opção();
 bool inserirNotas(float notas[], int size);
 float calcularMedia(float notas[], int size);
@@ -93,21 +94,8 @@ int main() {
 } // fim main
 
 
-int ler_inteiro_no_intervalo(int minimo, int maximo, const char* mensagem) {
-    int valor;
-    do {
-        printf("%s", mensagem);
-        scanf("%d", &valor);
-        if (valor < minimo || valor > maximo) {
-            printf("Valor inválido. O valor deve estar entre %d e %d.\n", minimo, maximo);
-        }
-    } while (valor < minimo || valor > maximo);
-    return valor;
-} // fim ler_inteiro_no_intervalo
-
-
 int escolher_opção(){
-    int opção;
+    int opcao;
     printf("===== GESTÃO DE NOTAS =====\n");
     printf("1 - Inserir notas\n");
     printf("2 - Calcular média\n");
@@ -115,8 +103,8 @@ int escolher_opção(){
     printf("0 - Sair\n");
     printf("===========================\n");
     printf("Escolha uma opção: ");
-    scanf("%d", &opção);
-    return opção;
+    scanf("%d", &opcao);
+    return opcao;
 }
 
 
@@ -144,3 +132,16 @@ bool inserirNotas(float notas[], int size){
     }
     return true;
 }
+
+
+int ler_inteiro_no_intervalo(int minimo, int maximo, const char* mensagem) {
+    int valor;
+    do {
+        printf("%s", mensagem);
+        scanf("%d", &valor);
+        if (valor < minimo || valor > maximo) {
+            printf("Valor inválido. O valor deve estar entre %d e %d.\n", minimo, maximo);
+        }
+    } while (valor < minimo || valor > maximo);
+    return valor;
+} // fim ler_inteiro_no_intervalo

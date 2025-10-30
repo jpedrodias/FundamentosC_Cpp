@@ -10,7 +10,10 @@ passagem de parâmetros para funções e alocação dinâmica de memória.
 #include <stdio.h>
 
 int main () {
+    int idade = 25;
 
+    
+    
     return 0;
 }
 
