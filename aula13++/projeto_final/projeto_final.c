@@ -4,13 +4,16 @@
 #include <string.h>
 #include <ctype.h>
 #include <time.h>
+#include <locale.h> // Para setlocale Portuguese
+
 
 #define DEBUG_MODE 1 // 1 ativa prints de DEBUG e 0 desativa
 #define MAX_TENTATIVAS 6
-#define MAX_PALAVRAS 20
-#define MAX_PALAVRA_SIZE 15
+#define MAX_PALAVRAS 20 // número máximo de palavras carregadas de ficheiro
+#define MAX_PALAVRA_SIZE 25 // tamanho máximo de cada palavra
 
 
+// estrutura para definir menus
 struct Menu {
     int menu_width;
     int opcoes_length;
@@ -37,15 +40,22 @@ int carregar_tema(const char *tema, char palavras_file[MAX_PALAVRAS][MAX_PALAVRA
 
 
 int main(){
+    // define a localidade para Português
+    setlocale(LC_ALL, "Portuguese"); 
+
+    // inicializar gerador de números aleatórios uma vez
+    srand((unsigned) time(NULL));
+
 
     // Definições para abrir os ficheiros de palavras palavras_code, palavras_animais, palavras_frutas
-    char configuracoes_temas[][30] = {"code", "animals", "fruits"};
+    char configuracoes_temas[][30] = {"code", "animals", "fruits"}; // "palavras_%s.txt"
     char configuracoes_temas_current[30];
     strcpy(configuracoes_temas_current, configuracoes_temas[0]); // tema padrão "code"
 
 
+    // Definição do menu principal
     struct Menu menuPrincipal = {
-        35, // menu_width (aumentado para caber as opções)
+        40, // menu_width (aumentado para caber as opções)
         4,  // opcoes_length
         "Menu Principal - Jogo da Forca", 
         {"1", "2", "3", "0"},
@@ -55,9 +65,10 @@ int main(){
     enum MenuPrincipal { INICIAR_JOGO = 1, CONFIGURAR_JOGO = 2, SOBRE = 3, SAIR = 0 };
 
 
+    // Definição do menu configurar
     struct Menu menuConfigurar = {
         40, 3,
-        "Menu Configurar Jogo",
+        "Menu Configurar - Jogo da Forca",
         {"1", "2", "0"},
         {"Definir Dificuldade", "Definir Tema", "Voltar ao Menu Principal"},
         0
@@ -66,9 +77,7 @@ int main(){
 
 
     bool gameOver = false;
-    /* inicializar gerador de números aleatórios uma vez */
-    srand((unsigned) time(NULL));
-    while (!gameOver) {
+    while (gameOver == false) {
         cleanScreen();
         drawMenu(menuPrincipal);
         menuPrincipal.escolha_feita = ler_opcoes_do_menu(menuPrincipal, "Escolha uma opção: ");
