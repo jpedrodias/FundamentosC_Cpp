@@ -16,6 +16,40 @@ const char* palavras[TOTAL_PALAVRAS] = {
     "SISTEMA", "PROCESSADOR", "TECLADO", "INTERNET", "SOFTWARE"
 };
 
+/*
+ * Lê palavras de um ficheiro (uma palavra por linha) para um array fornecido.
+ * Retorna o número de palavras lidas. Linhas vazias são ignoradas.
+ * Cada palavra é truncada a (MAX_PALAVRA-1) e terminada por '\0'.
+ */
+int load_palavras(const char *filename, char out_palavras[][MAX_PALAVRA], int max_palavras) {
+    FILE *f = fopen(filename, "r");
+    if (!f) return 0; /* não conseguiu abrir */
+
+    char line[512];
+    int count = 0;
+    while (count < max_palavras && fgets(line, sizeof(line), f)) {
+        /* remover espaços iniciais/finais e newline */
+        char *s = line;
+        /* trim left */
+        while (*s == ' ' || *s == '\t' || *s == '\r' || *s == '\n') s++;
+        /* trim right */
+        char *e = s + strlen(s) - 1;
+        while (e >= s && (*e == '\n' || *e == '\r' || *e == ' ' || *e == '\t')) { *e = '\0'; e--; }
+
+        if (*s == '\0') continue; /* linha vazia */
+
+        /* copiar para o array de saída e normalizar para maiúsculas */
+        size_t i;
+        for (i = 0; i < MAX_PALAVRA - 1 && s[i] != '\0'; i++) {
+            out_palavras[count][i] = toupper((unsigned char)s[i]);
+        }
+        out_palavras[count][i] = '\0';
+        count++;
+    }
+    fclose(f);
+    return count;
+}
+
 // Funcao para desenhar a forca
 void desenharForca(int erros) {
     printf("\n");
@@ -80,9 +114,21 @@ int palavraCompleta(const char* descobertas, int tamanho) {
 
 // Funcao principal do jogo
 void jogar() {
-    // Selecionar palavra aleatoria
+    // Selecionar palavra aleatoria (tenta carregar de ficheiro palavras.txt ou palacras.txt)
     srand(time(NULL));
-    const char* palavra = palavras[rand() % TOTAL_PALAVRAS];
+    char palavras_file[200][MAX_PALAVRA];
+    int n_file = load_palavras("palavras.txt", palavras_file, 200);
+    if (n_file == 0) {
+        /* compatibilidade: ficheiro com nome possivelmente mal escrito */
+        n_file = load_palavras("palacras.txt", palavras_file, 200);
+    }
+
+    const char* palavra;
+    if (n_file > 0) {
+        palavra = palavras_file[rand() % n_file];
+    } else {
+        palavra = palavras[rand() % TOTAL_PALAVRAS];
+    }
     int tamanhoPalavra = strlen(palavra);
 
     // Arrays para controle do jogo
