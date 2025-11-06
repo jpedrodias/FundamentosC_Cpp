@@ -16,39 +16,6 @@ const char* palavras[TOTAL_PALAVRAS] = {
     "SISTEMA", "PROCESSADOR", "TECLADO", "INTERNET", "SOFTWARE"
 };
 
-/*
- * Lê palavras de um ficheiro (uma palavra por linha) para um array fornecido.
- * Retorna o número de palavras lidas. Linhas vazias são ignoradas.
- * Cada palavra é truncada a (MAX_PALAVRA-1) e terminada por '\0'.
- */
-int load_palavras(const char *filename, char out_palavras[][MAX_PALAVRA], int max_palavras) {
-    FILE *f = fopen(filename, "r");
-    if (!f) return 0; /* não conseguiu abrir */
-
-    char line[512];
-    int count = 0;
-    while (count < max_palavras && fgets(line, sizeof(line), f)) {
-        /* remover espaços iniciais/finais e newline */
-        char *s = line;
-        /* trim left */
-        while (*s == ' ' || *s == '\t' || *s == '\r' || *s == '\n') s++;
-        /* trim right */
-        char *e = s + strlen(s) - 1;
-        while (e >= s && (*e == '\n' || *e == '\r' || *e == ' ' || *e == '\t')) { *e = '\0'; e--; }
-
-        if (*s == '\0') continue; /* linha vazia */
-
-        /* copiar para o array de saída e normalizar para maiúsculas */
-        size_t i;
-        for (i = 0; i < MAX_PALAVRA - 1 && s[i] != '\0'; i++) {
-            out_palavras[count][i] = toupper((unsigned char)s[i]);
-        }
-        out_palavras[count][i] = '\0';
-        count++;
-    }
-    fclose(f);
-    return count;
-}
 
 // Funcao para desenhar a forca
 void desenharForca(int erros) {

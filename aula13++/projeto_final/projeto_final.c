@@ -1,15 +1,18 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h> // Para system("cls") ou system("clear")
-#include <string.h>
+#include <string.h> // strcopy
 #include <ctype.h>
 #include <time.h>
 #include <locale.h> // Para setlocale Portuguese
+
+#define _CRT_SECURE_NO_WARNINGS // dica do Pedro Sanches
 
 
 #define DEBUG_MODE 1 // 1 ativa prints de DEBUG e 0 desativa
 #define MAX_TENTATIVAS 6
 #define MAX_PALAVRAS 20 // número máximo de palavras carregadas de ficheiro
+#define MAX_PALAVRAS_NIVEL 5 // número máximo de palavras por nível de dificuldade
 #define MAX_PALAVRA_SIZE 25 // tamanho máximo de cada palavra
 
 
@@ -24,14 +27,29 @@ struct Menu {
 } Menu;
 
 
-// funções para desenhar os menus
+struct Estado_do_Jogo {
+    char tema_atual[MAX_PALAVRA_SIZE];
+    char palavra_atual[MAX_PALAVRA_SIZE];
+    int  dificuldade_atual; // 0: fácil, 1: médio, 2: difícil, 3: muito difícil
+} Estado_do_Jogo;
+
+
+// Funções para desenhar os menus
 void cleanScreen();
 void fillCharLine(const char* str, int count);
 void drawMenu(struct Menu menu);
 
-// funções para validação dos dados inseridos pelo utilizador
+
+// Funções para validação dos dados inseridos pelo utilizador
 int ler_inteiro_no_intervalo(int minimo, int maximo, const char* mensagem);
 int ler_opcoes_do_menu(struct Menu menu, const char* mensagem);
+void ler_enter_para_continuar(const char* mensagem);
+
+// Função do jogo da forca
+void jogar(const char *palavra); /* rotina de jogo (usa a palavra fornecida) */
+
+// Função para selecionar uma palavra com base no nível de dificuldade
+int selecionar_palavra_por_nivel(char palavras_file[MAX_PALAVRAS][MAX_PALAVRA_SIZE], int n, struct Estado_do_Jogo *estado);
 
 // Carregar palavras de ficheiros - Os ficheiros têm vários temas
 int load_palavras_file(const char *filename, char out_palavras[MAX_PALAVRAS][MAX_PALAVRA_SIZE], int max_palavras);
@@ -47,33 +65,79 @@ int main(){
     srand((unsigned) time(NULL));
 
 
-    // Definições para abrir os ficheiros de palavras palavras_code, palavras_animais, palavras_frutas
-    char configuracoes_temas[][30] = {"code", "animals", "fruits"}; // "palavras_%s.txt"
-    char configuracoes_temas_current[30];
-    strcpy(configuracoes_temas_current, configuracoes_temas[0]); // tema padrão "code"
 
-
-    // Definição do menu principal
-    struct Menu menuPrincipal = {
-        40, // menu_width (aumentado para caber as opções)
-        4,  // opcoes_length
-        "Menu Principal - Jogo da Forca", 
-        {"1", "2", "3", "0"},
-        {"Iniciar Jogo", "Configurar Jogo", "Sobre", "Sair"},
-        0 // escolha_feita
-    }; 
-    enum MenuPrincipal { INICIAR_JOGO = 1, CONFIGURAR_JOGO = 2, SOBRE = 3, SAIR = 0 };
-
-
-    // Definição do menu configurar
-    struct Menu menuConfigurar = {
-        40, 3,
-        "Menu Configurar - Jogo da Forca",
-        {"1", "2", "0"},
-        {"Definir Dificuldade", "Definir Tema", "Voltar ao Menu Principal"},
-        0
+    // Definições para abrir os ficheiros de palavras palavras_codigo, palavras_animais, palavras_frutas
+    char configuracoes_temas[][30] = {"codigo", "animais", "frutas"}; // "palavras_%s.txt"
+    struct Estado_do_Jogo estado_jogo = {
+        .tema_atual = "",
+        .palavra_atual = "",
+        .dificuldade_atual = 0
     };
-    enum MenuConfigurar { CONFIGURAR_DIFICULDADE = 1, CONFIGURAR_TEMA = 2, VOLTAR_MENU_PRINCIPAL = 0 };
+    strcpy(estado_jogo.tema_atual, configuracoes_temas[0]);
+
+
+
+    // Definição do menu Principal
+    struct Menu menuPrincipal = {
+        .menu_width = 40,
+        .opcoes_length = 4,
+        .titulo = "Menu Principal - Jogo da Forca", 
+        .opcoes_key = {"1", "2", "3", "0"},
+        .opcoes_labels = {"Iniciar Jogo", "Configurar Jogo", "Sobre", "Sair"},
+        .escolha_feita = 0
+    }; 
+    enum enumMenuPrincipal { INICIAR_JOGO = 1, CONFIGURAR_JOGO = 2, SOBRE = 3, SAIR = 0 };
+
+
+
+    // Definição do menu Configurar
+    struct Menu menuConfigurar = {
+        .menu_width    = 40,
+        .opcoes_length = 3,
+        .titulo = "Menu Configurar - Jogo da Forca",
+        .opcoes_key = {"1", "2", "0"},
+        .opcoes_labels = {"Definir Dificuldade", "Definir Tema", "Voltar ao Menu Principal"},
+        .escolha_feita = 0
+    };
+    enum enumMenuConfigurar { CONFIGURAR_DIFICULDADE = 1, CONFIGURAR_TEMA = 2, CONFIGURAR_VOLTAR = 0 };
+
+
+
+    // Definição do menu Sobre
+    struct Menu menuSobre = {
+        .menu_width    = 40,
+        .opcoes_length = 3,
+        .titulo = "Sobre o Jogo da Forca",
+        .opcoes_key = {"", "", "0"},
+        .opcoes_labels = {"Autor: Pedro Dias", "Versao: 0.1", "Voltar ao Menu Principal"},
+        .escolha_feita = 0
+    };
+    enum MenuSobre { VOLTAR_SOBRE = 0 };
+
+
+
+    // Definição do menu Configurar / Nível de Dificuldade
+    struct Menu menuConfigurarDificuldade = {
+        .menu_width = 40,
+        .opcoes_length = 5,
+        .titulo = "Selecionar Dificuldade",
+        .opcoes_key = {"1", "2", "3", "4", "0"},
+        .opcoes_labels = {"Facil (ate 5 letras)", "Medio (ate 10 letras)", "Dificil (ate 15 letras)", "Muito Dificil (16+)", "Voltar"},
+        .escolha_feita = 0
+    };
+    enum enumMenuDificuldade { FACIL = 1, MEDIO = 2, DIFICIL = 3, MUITO_DIFICIL = 4, VOLTAR_DIFICULDADE = 0 };
+
+
+    // Definição do menu Configurar / Tema
+    struct Menu menuConfigurarTema = {
+        .menu_width = 40,
+        .opcoes_length = 4,
+        .titulo = "Selecionar Tema",
+        .opcoes_key = {"1", "2", "3", "0"},
+        .opcoes_labels = {"Codigo", "Animais", "Frutas", "Voltar"},
+        .escolha_feita = 0
+    };
+    enum MenuTema { TEMA_CODIGO = 1, TEMA_ANIMAIS = 2, TEMA_FRUTAS = 3, VOLTAR_TEMA = 0 };
 
 
     bool gameOver = false;
@@ -85,53 +149,86 @@ int main(){
         switch (menuPrincipal.escolha_feita) {
             case INICIAR_JOGO:
                 {
-                    /* buffer para palavras lidas do ficheiro */
+                    // buffer para palavras lidas do ficheiro de palavras (por tema)
                     char palavras_file[MAX_PALAVRAS][MAX_PALAVRA_SIZE];
                     int capacidade = (int)(sizeof(palavras_file) / sizeof(palavras_file[0]));
-                    int n = carregar_tema(configuracoes_temas_current, palavras_file, capacidade);
+                    int n = carregar_tema(estado_jogo.tema_atual, palavras_file, capacidade);
                     if (n > 0) {
-                        int idx = rand() % n;
+
+                        // pick é o índice da palavra escolhida - não usado nesta versão porque o estado_jogo é passado por endereço
+                        int pick = selecionar_palavra_por_nivel(palavras_file, n, &estado_jogo);
                         #ifdef DEBUG_MODE
-                        printf("Palavra escolhida (para teste): %s\n", palavras_file[idx]);
+                            printf("Palavra escolhida (para teste): %s\n", estado_jogo.palavra_atual);
                         #endif
-                        /* Aqui podes chamar a função de jogar passando a palavra escolhida */
+                        
+                        // Chamar a rotina de jogo passando a palavra escolhida
+                        jogar(estado_jogo.palavra_atual);
+
                     } else {
                         printf("Nenhuma palavra disponível para o tema atual.\n");
                     }
                     #ifdef DEBUG_MODE
-                    menuPrincipal.escolha_feita = ler_inteiro_no_intervalo(0, 0, "Pressione Enter para voltar ao menu...");
+                        ler_enter_para_continuar("Pressione Enter para voltar ao menu...");
                     #endif
                 }
                 break;
+
             case CONFIGURAR_JOGO:
-                printf("Configurando o jogo...\n");
+
                 cleanScreen();
                 drawMenu(menuConfigurar);
                 menuConfigurar.escolha_feita = ler_opcoes_do_menu(menuConfigurar, "Escolha uma opção: ");
 
                 switch (menuConfigurar.escolha_feita) {
                 case CONFIGURAR_DIFICULDADE:
-                    /* a dificuldade é o tamanho da palavra: até 5, até 10, até 15 ou mais*/
+                    
+                    cleanScreen();
+                    drawMenu(menuConfigurarDificuldade);
+                    menuConfigurarDificuldade.escolha_feita = ler_opcoes_do_menu(menuConfigurarDificuldade, "Escolha uma opção: ");
+
+                    if (menuConfigurarDificuldade.escolha_feita >= 1 && menuConfigurarDificuldade.escolha_feita <= 4) {
+                        estado_jogo.dificuldade_atual = menuConfigurarDificuldade.escolha_feita - 1; /* 0..3 */
+                        
+                        #ifdef DEBUG_MODE
+                        const char *legenda_dificuldade[] = {"Facil (<=5)", "Medio (<=10)", "Dificil (<=15)", "Muito Dificil (16+)"};
+                        printf("Dificuldade definida para: %s\n", legenda_dificuldade[estado_jogo.dificuldade_atual]);
+                        ler_enter_para_continuar("Pressione Enter para voltar ao menu...");
+                        #endif
+
+                    }
                     break;
                 case CONFIGURAR_TEMA:
-                    printf("Selecionar Tema:\n");
-                    for (int i = 0; i < (int)(sizeof(configuracoes_temas) / sizeof(configuracoes_temas[0])); i++) {
-                        printf("%d - %s\n", i + 1, configuracoes_temas[i]);
-                    }
-                    {
-                        int tema_escolhido = ler_inteiro_no_intervalo(1, (int)(sizeof(configuracoes_temas) / sizeof(configuracoes_temas[0])), "Escolha o número do tema: ");
-                        strcpy(configuracoes_temas_current, configuracoes_temas[tema_escolhido - 1]);
-                        printf("Tema definido para: %s\n", configuracoes_temas_current);
+                    
+                    cleanScreen();
+                    drawMenu(menuConfigurarTema);
+                    menuConfigurarTema.escolha_feita = ler_opcoes_do_menu(menuConfigurarTema, "Escolha uma opção: ");
+
+                    if (menuConfigurarTema.escolha_feita >= 1 && menuConfigurarTema.escolha_feita <= (int)(sizeof(configuracoes_temas) / sizeof(configuracoes_temas[0]))) {
+                        int idx = menuConfigurarTema.escolha_feita - 1;
+                        strcpy(estado_jogo.tema_atual, configuracoes_temas[idx]);
+                        
+                        #ifdef DEBUG_MODE
+                            printf("Tema definido para: %s\n", estado_jogo.tema_atual);
+                            ler_enter_para_continuar("Pressione Enter para voltar ao menu...");
+                        #endif
+
                     }
                     break;
                 default:
                     break;
                 }
-
-
                 break;
             case SOBRE:
-                printf("Jogo da Forca - Versão 1.0\nDesenvolvido por PedroDias\n");
+                cleanScreen();
+                drawMenu(menuSobre);
+                menuSobre.escolha_feita = ler_opcoes_do_menu(menuSobre, "Escolha uma opção: ");
+
+                switch (menuSobre.escolha_feita) {
+                    case VOLTAR_SOBRE:
+                        break;
+                    default:
+                        break;
+                }
                 break;
             case SAIR:
                 printf("Saindo do programa...\n");
@@ -147,13 +244,9 @@ int main(){
 } // fim main
 
 
-/*
- * Limpa a tela do console.
- * Em Windows usa "cls", noutros sistemas usa "clear".
- * Não tem parâmetros e não retorna valor.
- */
+
+// Limpa ecra »  Em Windows usa "cls", noutros sistemas usa "clear".
 void cleanScreen() {
-    // Limpa a tela do console
     #ifdef _WIN32
         system("cls");
     #else
@@ -162,26 +255,26 @@ void cleanScreen() {
 } // fim cleanScreen
 
 
+
 /*
- * Imprime `str` repetida `count` vezes sem nova linha.
- * Usada para desenhar linhas do menu (bordas e espaços).
- * Parâmetros:
- *  - str: string a repetir (por exemplo "═" ou " ")
- *  - count: número de repetições
- */
+Imprime "str" repetida "count" vezes sem nova linha.
+Usada para desenhar linhas do menu (bordas e espaços).
+Parâmetros:
+- str: string a repetir (por exemplo "═" ou " ")
+- count: número de repetições
+*/
 void fillCharLine(const char* str, int count) {
     for (int i = 0; i < count; i++) {
         printf("%s", str);
     }
-}
+} // fim fillCharLine
 
 
-/*
- * Desenha um menu caixa no ecrã com título e opções.
- * O `struct Menu` contém largura, número de opções, título,
- * chaves das opções e rótulos. Esta função apenas imprime o menu
- * formatado; não processa entrada do utilizador.
- */
+
+/* Desenha um menu caixa no ecrã com título e opções.
+O "struct Menu" contém largura, número de opções, título,chaves das opções e rótulos.
+Esta função apenas imprime o menu formatado; não processa entrada do utilizador.
+*/
 void drawMenu(struct Menu menu){
     int menu_width = menu.menu_width;
     int opcoes_length = menu.opcoes_length;
@@ -202,35 +295,52 @@ void drawMenu(struct Menu menu){
     fillCharLine("═", menu_width - 2);
     printf("╣\n");
 
-    // Linhas das opções
+    // Listar todas as opções do menu
     for (int i = 0; i < opcoes_length; i++) {
-        printf("║ %s - %s", menu.opcoes_key[i], menu.opcoes_labels[i]);
-        int opcao_length = strlen(menu.opcoes_key[i]) + strlen(menu.opcoes_labels[i]) + 5;
-        fillCharLine(" ", menu_width - opcao_length - 1);
-        printf("║\n");
+
+        if (menu.opcoes_key[i][0] == '\0') {
+            // Verificar se a chave está vazia: comparar o primeiro carácter com '\0'.
+            printf("║ %s", menu.opcoes_labels[i]);
+            int opcao_length = strlen(menu.opcoes_labels[i]) + 2;
+            fillCharLine(" ", menu_width - opcao_length - 1);
+            printf("║\n");
+        } else {
+            // Senão, colocar também a opção key
+            printf("║ %s - %s", menu.opcoes_key[i], menu.opcoes_labels[i]);
+            int opcao_length = strlen(menu.opcoes_key[i]) + strlen(menu.opcoes_labels[i]) + 5;
+            fillCharLine(" ", menu_width - opcao_length - 1);
+            printf("║\n");
+        }
+
     }
 
     // Linha inferior: ╚═══...═══╝
     printf("╚");
     fillCharLine("═", menu_width - 2);
     printf("╝\n");
-}
+} // fim drawMenu
+
 
 
 /*
- * Lê um inteiro do utilizador garantindo que fica entre `minimo` e `maximo`.
- * Repete o pedido até o utilizador fornecer um valor válido.
- * Parâmetros:
- *  - minimo: limite inferior (inclusivo)
- *  - maximo: limite superior (inclusivo)
- *  - mensagem: mensagem mostrada ao pedir o valor
- * Retorna: o inteiro lido (garantido dentro do intervalo).
+Lê um inteiro do utilizador garantindo que fica entre `minimo` e `maximo`.
+Repete o pedido até o utilizador fornecer um valor válido.
+Parâmetros:
+ - minimo: limite inferior (inclusivo)
+ - maximo: limite superior (inclusivo)
+ - mensagem: mensagem mostrada ao pedir o valor
+Retorna: o inteiro lido (garantido dentro do intervalo).
  */
 int ler_inteiro_no_intervalo(int minimo, int maximo, const char* mensagem) {
     int valor;
     do {
         printf("%s", mensagem);
         scanf("%d", &valor);
+        /* Consumir o resto da linha (inclui o '\n' deixado pelo utilizador) para evitar
+         * que leitores seguintes (fgets) sejam imediatamente satisfeitos por esse '\n'.
+         */
+        int _c;
+        while ((_c = getchar()) != '\n' && _c != EOF) { }
         if (valor < minimo || valor > maximo) {
             printf("Valor inválido. O valor deve estar entre %d e %d.\n", minimo, maximo);
         }
@@ -239,12 +349,27 @@ int ler_inteiro_no_intervalo(int minimo, int maximo, const char* mensagem) {
 } // fim ler_inteiro_no_intervalo
 
 
+
+/* Aguarda o utilizador pressionar Enter. Mostra uma mensagem e lê uma linha.
+Usa fgets para consumir a linha atual (se existir) ou bloquear até o utilizador pressionar Enter.
+*/
+void ler_enter_para_continuar(const char* mensagem) {
+    char buf[64];
+    printf("%s", mensagem);
+    fflush(stdout);
+    if (fgets(buf, sizeof(buf), stdin) == NULL) {
+        /* EOF ou erro — apenas retorna */
+        return;
+    }
+} // fim ler_enter_para_continuar
+
+
+
 /*
- * Lê a opção escolhida pelo utilizador para um dado `Menu`.
- * O utilizador escreve a chave (por exemplo "1", "0"). A função valida
- * se a chave corresponde a uma das `opcoes_key` do menu e retorna o
- * inteiro correspondente (converte a string com atoi).
- * Retorna o inteiro da opção encontrada ou -1 em caso de erro.
+Lê a opção escolhida pelo utilizador para um dado `Menu`.
+O utilizador escreve a chave (por exemplo "1", "0"). A função valida se a chave corresponde a uma das `opcoes_key` do menu 
+e retorna o inteiro correspondente (converte a string com atoi).
+Retorna o inteiro da opção encontrada ou -1 em caso de erro.
  */
 int ler_opcoes_do_menu(struct Menu menu, const char* mensagem) {
     char input[3];
@@ -254,6 +379,11 @@ int ler_opcoes_do_menu(struct Menu menu, const char* mensagem) {
     do {
         printf("%s", mensagem);
         scanf("%2s", input);
+        /* Consumir o resto da linha (inclui o '\n') para deixar stdin numa
+         * posição limpa para chamadas que usem fgets posteriormente.
+         */
+        int _c2;
+        while ((_c2 = getchar()) != '\n' && _c2 != EOF) { }
 
         // Verificar se o input corresponde a alguma opcao_key do menu
         valido = 0;
@@ -279,6 +409,7 @@ int ler_opcoes_do_menu(struct Menu menu, const char* mensagem) {
 
     return opcao_encontrada;
 } // fim ler_opcoes_do_menu
+
 
 
 /*
@@ -311,7 +442,8 @@ int load_palavras_file(const char *filename, char out_palavras[MAX_PALAVRAS][MAX
     }
     fclose(f);
     return count;
-}
+} // fim load_palavras_file
+
 
 
 /*
@@ -331,4 +463,259 @@ int carregar_tema(const char *tema, char palavras_file[MAX_PALAVRAS][MAX_PALAVRA
         printf("Iniciando o jogo com palavras embutidas...\n");
     }
     return n;
-}
+} // fim carregar_tema
+
+
+
+/* Seleciona uma palavra com base no nível guardado em estado->dificuldade_atual.
+- palavras_file: array de palavras carregadas
+- n: número de palavras carregadas
+- estado: ponteiro para o estado do jogo (atualiza estado->palavra_atual)
+Retorna o índice da palavra escolhida (0..n-1) ou -1 se n <= 0.
+ */
+int selecionar_palavra_por_nivel(char palavras_file[MAX_PALAVRAS][MAX_PALAVRA_SIZE], int n, struct Estado_do_Jogo *estado) {
+    if (n <= 0) return -1;
+
+    int nivel = estado->dificuldade_atual;
+    int nivel_idx_i = nivel * MAX_PALAVRAS_NIVEL; /* índice inicial (inclusivo) */
+    int pick = 0;
+
+    if (nivel_idx_i >= n) {
+        // fallback: escolher qualquer palavra disponível
+        pick = rand() % n;
+    } else {
+        int available = n - nivel_idx_i;
+        int choice_range = (available >= MAX_PALAVRAS_NIVEL) ? MAX_PALAVRAS_NIVEL : available;
+        pick = nivel_idx_i + (rand() % choice_range);
+    }
+
+    // Tentar evitar repetir a palavra anterior quando houver alternativas
+    if (n > 1 && estado->palavra_atual[0] != '\0') {
+        int attempts = 0;
+        while (strcmp(estado->palavra_atual, palavras_file[pick]) == 0 && attempts < 10) {
+            if (nivel_idx_i >= n) {
+                pick = rand() % n;
+            } else {
+                int available = n - nivel_idx_i;
+                int choice_range = (available >= MAX_PALAVRAS_NIVEL) ? MAX_PALAVRAS_NIVEL : available;
+                pick = nivel_idx_i + (rand() % choice_range);
+            }
+            attempts++;
+        }
+    }
+
+    // Guardar palavra escolhida no estado
+    strncpy(estado->palavra_atual, palavras_file[pick], MAX_PALAVRA_SIZE - 1);
+    estado->palavra_atual[MAX_PALAVRA_SIZE - 1] = '\0';
+
+    return pick;
+} // fim selecionar_palavra_por_nivel
+
+
+
+/*
+ * Recebe a "palavra" e executa um ciclo de jogo
+ * com desenho ASCII da forca, leitura de letras e verificação de vitória/derrota.
+ */
+void desenharForca(int erros) {
+    printf("\n");
+    printf("   ______\n");
+    printf("   |    |\n");
+    printf("   |    %c\n",    (erros >= 1) ? 'O' : ' ');
+    printf("   |   %c%c%c\n", (erros >= 3) ? '/' : ' ', (erros >= 2) ? '|' : ' ', (erros >= 4) ? '\\' : ' ');
+    printf("   |   %c %c\n",  (erros >= 5) ? '/' : ' ', (erros >= 6) ? '\\' : ' ' );
+    printf("   |\n");
+    printf("___|___\n\n");
+} // fim desenharForca
+
+
+
+// Exibe a palavra com letras descobertas e underscores para letras não descobertas
+void exibirPalavra(const char* palavra, const char* descobertas) {
+    printf("Palavra: ");
+    for (int i = 0; palavra[i] != '\0'; i++) {
+        if (descobertas[i]) {
+            printf("%c ", palavra[i]);
+        } else {
+            printf("_ ");
+        }
+    }
+    printf("\n");
+} // fim exibirPalavra
+
+
+
+// Exibe as letras já tentadas pelo jogador
+void exibirTentativas(const char* tentadas, int numTentadas) {
+    if (numTentadas > 0) {
+        printf("Letras tentadas: ");
+        for (int i = 0; i < numTentadas; i++) {
+            printf("%c ", tentadas[i]);
+        }
+        printf("\n");
+    }
+} // fim exibirTentativas
+
+
+
+// Verifica se a letra já foi tentada
+int letraJaTentada(char letra, const char* tentadas, int numTentadas) {
+    for (int i = 0; i < numTentadas; i++) {
+        if (tentadas[i] == letra) return 1;
+    }
+    return 0;
+} // fim letraJaTentada
+
+
+
+// Limpa o buffer de entrada para evitar problemas com scanf
+void limparBufferEntrada() {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF) { }
+} // fim limparBufferEntrada
+
+
+
+// Verifica se a palavra foi completamente descoberta
+int palavraCompleta(const char* descobertas, int tamanho) {
+    for (int i = 0; i < tamanho; i++) if (!descobertas[i]) return 0;
+    return 1;
+} // fim palavraCompleta
+
+
+
+// Função principal para iniciar o jogo da forca.
+void jogar(const char *palavra) {
+
+    if (!palavra || palavra[0] == '\0') {
+        printf("Nenhuma palavra definida para jogar.\n");
+        return;
+    }
+
+    int tamanhoPalavra = (int)strlen(palavra);
+    char descobertas[MAX_PALAVRA_SIZE] = {0};
+    char tentadas[26] = {0};
+    int numTentadas = 0;
+    int erros = 0;
+
+    // Limpar o ecrã antes de iniciar o jogo
+    cleanScreen();
+
+    while (erros < MAX_TENTATIVAS && !palavraCompleta(descobertas, tamanhoPalavra)) {
+
+        
+        cleanScreen();
+        
+        int box_width = 40;
+        const char *titulo_jogo = "BEM-VINDO AO JOGO DA FORCA!";
+        printf("\n");
+        printf("╔"); fillCharLine("═", box_width - 2); printf("╗\n");
+        printf("║ %s", titulo_jogo);
+        int titulo_length = (int)strlen(titulo_jogo);
+        fillCharLine(" ", box_width - titulo_length - 3);
+        printf("║\n");
+        printf("╠"); fillCharLine("═", box_width - 2); printf("╣\n");
+        char buf[64];
+        int l = snprintf(buf, sizeof(buf), "Voce tem %d tentativas!", MAX_TENTATIVAS);
+        printf("║ %s", buf);
+        fillCharLine(" ", box_width - l - 3);
+        printf("║\n");
+        printf("╚"); fillCharLine("═", box_width - 2); printf("╝\n");
+        printf("\n");
+        desenharForca(erros);
+        exibirPalavra(palavra, descobertas);
+        exibirTentativas(tentadas, numTentadas);
+        printf("\nTentativas restantes: %d\n", MAX_TENTATIVAS - erros);
+
+        char letra;
+        printf("\nDigite uma letra: ");
+        if (scanf(" %c", &letra) != 1) {
+            limparBufferEntrada();
+            continue;
+        }
+        limparBufferEntrada();
+
+        letra = (char) toupper((unsigned char)letra);
+        if (!isalpha((unsigned char)letra)) {
+            printf("\nPor favor, digite apenas letras!\n");
+            continue;
+        }
+
+        if (letraJaTentada(letra, tentadas, numTentadas)) {
+            printf("\nVoce ja tentou essa letra!\n");
+            continue;
+        }
+
+        tentadas[numTentadas++] = letra;
+
+        int acertou = 0;
+        for (int i = 0; i < tamanhoPalavra; i++) {
+            if (palavra[i] == letra) { descobertas[i] = 1; acertou = 1; }
+        }
+
+        if (acertou) {
+            printf("\nBoa! A letra '%c' esta na palavra!\n", letra);
+        } else {
+            erros++;
+            printf("\nOps! A letra '%c' nao esta na palavra.\n", letra);
+        }
+    }
+
+    // Resultado final: desenhar uma caixa com caracteres box-drawing (como drawMenu)
+    int box_width = 40;
+    printf("\n");
+    if (palavraCompleta(descobertas, tamanhoPalavra)) {
+        
+        // Desenhar a forca final (vitoria)
+        const char *title = "PARABENS! VOCE VENCEU!";
+        char line1[128];
+        char line2[128];
+        snprintf(line1, sizeof(line1), "A palavra era: %s", palavra);
+        snprintf(line2, sizeof(line2), "Voce conseguiu com %d erro(s)!", erros);
+
+        printf("╔"); fillCharLine("═", box_width - 2); printf("╗\n");
+        printf("║ %s", title);
+        int tlen = (int)strlen(title);
+        fillCharLine(" ", box_width - tlen - 3);
+        printf("║\n");
+        printf("╠"); fillCharLine("═", box_width - 2); printf("╣\n");
+
+        printf("║ %s", line1);
+        fillCharLine(" ", box_width - (int)strlen(line1) - 3);
+        printf("║\n");
+
+        printf("║ %s", line2);
+        fillCharLine(" ", box_width - (int)strlen(line2) - 3);
+        printf("║\n");
+
+        printf("╚"); fillCharLine("═", box_width - 2); printf("╝\n");
+
+    } else {
+
+        // Mostrar a forca final antes da caixa para o utilizador ver o estado
+        desenharForca(erros);
+        const char *title = "GAME OVER!";
+        char line1[128];
+        char line2[128];
+        snprintf(line1, sizeof(line1), "A palavra era: %s", palavra);
+        snprintf(line2, sizeof(line2), "Mais sorte na proxima vez!");
+
+        printf("╔"); fillCharLine("═", box_width - 2); printf("╗\n");
+        printf("║ %s", title);
+        int tlen = (int)strlen(title);
+        fillCharLine(" ", box_width - tlen - 3);
+        printf("║\n");
+        printf("╠"); fillCharLine("═", box_width - 2); printf("╣\n");
+
+        printf("║ %s", line1);
+        fillCharLine(" ", box_width - (int)strlen(line1) - 3);
+        printf("║\n");
+
+        printf("║ %s", line2);
+        fillCharLine(" ", box_width - (int)strlen(line2) - 3);
+        printf("║\n");
+
+        printf("╚"); fillCharLine("═", box_width - 2); printf("╝\n");
+        
+    }
+} // fim jogar
