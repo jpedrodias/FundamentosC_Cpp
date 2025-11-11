@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h> // Para system("cls") ou system("clear")
-#include <string.h> // strcopy
+#include <string.h> // strcopy - String Copy porque strin1 = string2 não funciona em C (assignar vetores)
 #include <ctype.h>
-#include <time.h>
+#include <time.h>   // "ruído" para o seed do gerador de números aleatórios
 #include <locale.h> // Para setlocale Portuguese
 
 #define _CRT_SECURE_NO_WARNINGS // dica do Pedro Sanches
@@ -68,12 +68,13 @@ int main(){
 
     // Definições para abrir os ficheiros de palavras palavras_codigo, palavras_animais, palavras_frutas
     char configuracoes_temas[][30] = {"codigo", "animais", "frutas"}; // "palavras_%s.txt"
+
     struct Estado_do_Jogo estado_jogo = {
         .tema_atual = "",
         .palavra_atual = "",
         .dificuldade_atual = 0
     };
-    strcpy(estado_jogo.tema_atual, configuracoes_temas[0]);
+    strcpy(estado_jogo.tema_atual, configuracoes_temas[0]); // String Copy
 
 
 
@@ -103,19 +104,6 @@ int main(){
 
 
 
-    // Definição do menu Sobre
-    struct Menu menuSobre = {
-        .menu_width    = 40,
-        .opcoes_length = 3,
-        .titulo = "Sobre o Jogo da Forca",
-        .opcoes_key = {"", "", "0"},
-        .opcoes_labels = {"Autor: Pedro Dias", "Versao: 0.1", "Voltar ao Menu Principal"},
-        .escolha_feita = 0
-    };
-    enum MenuSobre { VOLTAR_SOBRE = 0 };
-
-
-
     // Definição do menu Configurar / Nível de Dificuldade
     struct Menu menuConfigurarDificuldade = {
         .menu_width = 40,
@@ -126,6 +114,7 @@ int main(){
         .escolha_feita = 0
     };
     enum enumMenuDificuldade { FACIL = 1, MEDIO = 2, DIFICIL = 3, MUITO_DIFICIL = 4, VOLTAR_DIFICULDADE = 0 };
+
 
 
     // Definição do menu Configurar / Tema
@@ -140,6 +129,19 @@ int main(){
     enum MenuTema { TEMA_CODIGO = 1, TEMA_ANIMAIS = 2, TEMA_FRUTAS = 3, VOLTAR_TEMA = 0 };
 
 
+
+    // Definição do menu Sobre
+    struct Menu menuSobre = {
+        .menu_width    = 40,
+        .opcoes_length = 3,
+        .titulo = "Sobre o Jogo da Forca",
+        .opcoes_key = {"", "", "0"},
+        .opcoes_labels = {"Autor: Pedro Dias", "Versao: 0.1", "Voltar ao Menu Principal"},
+        .escolha_feita = 0
+    };
+    enum MenuSobre { VOLTAR_SOBRE = 0 };
+
+
     bool gameOver = false;
     while (gameOver == false) {
         cleanScreen();
@@ -148,8 +150,9 @@ int main(){
         
         switch (menuPrincipal.escolha_feita) {
             case INICIAR_JOGO:
-                {
-                    // buffer para palavras lidas do ficheiro de palavras (por tema)
+                { // EXPLICAR CHAVETA » Bloco Isolado ou Independente » Delimita o Contexto
+
+                    // Buffer para palavras lidas do ficheiro de palavras (por tema)
                     char palavras_file[MAX_PALAVRAS][MAX_PALAVRA_SIZE];
                     int capacidade = (int)(sizeof(palavras_file) / sizeof(palavras_file[0]));
                     int n = carregar_tema(estado_jogo.tema_atual, palavras_file, capacidade);
@@ -159,6 +162,7 @@ int main(){
                         int pick = selecionar_palavra_por_nivel(palavras_file, n, &estado_jogo);
                         #ifdef DEBUG_MODE
                             printf("Palavra escolhida (para teste): %s\n", estado_jogo.palavra_atual);
+                            ler_enter_para_continuar("Pressione Enter para continuar");
                         #endif
                         
                         // Chamar a rotina de jogo passando a palavra escolhida
@@ -167,9 +171,11 @@ int main(){
                     } else {
                         printf("Nenhuma palavra disponível para o tema atual.\n");
                     }
+
                     #ifdef DEBUG_MODE
                         ler_enter_para_continuar("Pressione Enter para voltar ao menu...");
                     #endif
+
                 }
                 break;
 
@@ -197,6 +203,7 @@ int main(){
 
                     }
                     break;
+
                 case CONFIGURAR_TEMA:
                     
                     cleanScreen();
@@ -214,11 +221,15 @@ int main(){
 
                     }
                     break;
+
                 default:
                     break;
-                }
+
+                } // end switch menuConfigurar
                 break;
+
             case SOBRE:
+
                 cleanScreen();
                 drawMenu(menuSobre);
                 menuSobre.escolha_feita = ler_opcoes_do_menu(menuSobre, "Escolha uma opção: ");
@@ -228,17 +239,20 @@ int main(){
                         break;
                     default:
                         break;
-                }
+                } // end switch menuSobre
                 break;
+
             case SAIR:
                 printf("Saindo do programa...\n");
                 gameOver = true;
                 break;
+
             default:
                 printf("Opção inválida!\n");
                 break;
-        }
-    }
+
+        } // end switch escolha do menu principal
+    } // end while loop gameOver
 
     return 0; 
 } // fim main
