@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h> // Para system("cls") ou system("clear")
-#include <string.h> // strcopy - String Copy porque strin1 = string2 não funciona em C (assignar vetores)
+#include <string.h> // strcopy
 #include <ctype.h>
-#include <time.h>   // "ruído" para o seed do gerador de números aleatórios
+#include <time.h>
 #include <locale.h> // Para setlocale Portuguese
 
 #define _CRT_SECURE_NO_WARNINGS // dica do Pedro Sanches
@@ -15,8 +15,23 @@
 #define MAX_PALAVRAS_NIVEL 5 // número máximo de palavras por nível de dificuldade
 #define MAX_PALAVRA_SIZE 25 // tamanho máximo de cada palavra
 
+/*
 
-// estrutura para definir menus
+Menu Principal
+
+ - 1. Iniciar Jogo
+ - 2. Configurar Jogo
+    - 1. Definir Dificuldade » - sub menu dificuldades e voltar
+    - 2. Definir Tema        » - sub menu temas e voltar
+    - 0. voltar 
+ - Sobre
+ - Sair
+
+*/
+
+
+
+// Definição da estrutura para definir menus
 struct Menu {
     int menu_width;
     int opcoes_length;
@@ -27,6 +42,7 @@ struct Menu {
 } Menu;
 
 
+// Definição da estrutura para definir o estado do jogo
 struct Estado_do_Jogo {
     char tema_atual[MAX_PALAVRA_SIZE];
     char palavra_atual[MAX_PALAVRA_SIZE];
@@ -74,7 +90,7 @@ int main(){
         .palavra_atual = "",
         .dificuldade_atual = 0
     };
-    strcpy(estado_jogo.tema_atual, configuracoes_temas[0]); // String Copy
+    strcpy(estado_jogo.tema_atual, configuracoes_temas[0]);
 
 
 
@@ -104,6 +120,19 @@ int main(){
 
 
 
+    // Definição do menu Sobre
+    struct Menu menuSobre = {
+        .menu_width    = 40,
+        .opcoes_length = 3,
+        .titulo = "Sobre o Jogo da Forca",
+        .opcoes_key = {"", "", "0"},
+        .opcoes_labels = {"Autor: Pedro Dias", "Versao: 0.1", "Voltar ao Menu Principal"},
+        .escolha_feita = 0
+    };
+    enum enumMenuSobre { VOLTAR_SOBRE = 0 };
+
+
+
     // Definição do menu Configurar / Nível de Dificuldade
     struct Menu menuConfigurarDificuldade = {
         .menu_width = 40,
@@ -116,7 +145,6 @@ int main(){
     enum enumMenuDificuldade { FACIL = 1, MEDIO = 2, DIFICIL = 3, MUITO_DIFICIL = 4, VOLTAR_DIFICULDADE = 0 };
 
 
-
     // Definição do menu Configurar / Tema
     struct Menu menuConfigurarTema = {
         .menu_width = 40,
@@ -126,20 +154,7 @@ int main(){
         .opcoes_labels = {"Codigo", "Animais", "Frutas", "Voltar"},
         .escolha_feita = 0
     };
-    enum MenuTema { TEMA_CODIGO = 1, TEMA_ANIMAIS = 2, TEMA_FRUTAS = 3, VOLTAR_TEMA = 0 };
-
-
-
-    // Definição do menu Sobre
-    struct Menu menuSobre = {
-        .menu_width    = 40,
-        .opcoes_length = 3,
-        .titulo = "Sobre o Jogo da Forca",
-        .opcoes_key = {"", "", "0"},
-        .opcoes_labels = {"Autor: Pedro Dias", "Versao: 0.1", "Voltar ao Menu Principal"},
-        .escolha_feita = 0
-    };
-    enum MenuSobre { VOLTAR_SOBRE = 0 };
+    enum enumMenuTema { TEMA_CODIGO = 1, TEMA_ANIMAIS = 2, TEMA_FRUTAS = 3, VOLTAR_TEMA = 0 };
 
 
     bool gameOver = false;
@@ -150,9 +165,9 @@ int main(){
         
         switch (menuPrincipal.escolha_feita) {
             case INICIAR_JOGO:
-                { // EXPLICAR CHAVETA » Bloco Isolado ou Independente » Delimita o Contexto
+                { // "Naked block" | "Bare block" | "Anonymous block"
 
-                    // Buffer para palavras lidas do ficheiro de palavras (por tema)
+                    // buffer para palavras lidas do ficheiro de palavras (por tema)
                     char palavras_file[MAX_PALAVRAS][MAX_PALAVRA_SIZE];
                     int capacidade = (int)(sizeof(palavras_file) / sizeof(palavras_file[0]));
                     int n = carregar_tema(estado_jogo.tema_atual, palavras_file, capacidade);
@@ -160,9 +175,10 @@ int main(){
 
                         // pick é o índice da palavra escolhida - não usado nesta versão porque o estado_jogo é passado por endereço
                         int pick = selecionar_palavra_por_nivel(palavras_file, n, &estado_jogo);
+                        
                         #ifdef DEBUG_MODE
                             printf("Palavra escolhida (para teste): %s\n", estado_jogo.palavra_atual);
-                            ler_enter_para_continuar("Pressione Enter para continuar");
+                            ler_enter_para_continuar("Pressione Enter para voltar ao menu...");
                         #endif
                         
                         // Chamar a rotina de jogo passando a palavra escolhida
@@ -175,7 +191,6 @@ int main(){
                     #ifdef DEBUG_MODE
                         ler_enter_para_continuar("Pressione Enter para voltar ao menu...");
                     #endif
-
                 }
                 break;
 
@@ -203,7 +218,6 @@ int main(){
 
                     }
                     break;
-
                 case CONFIGURAR_TEMA:
                     
                     cleanScreen();
@@ -221,15 +235,11 @@ int main(){
 
                     }
                     break;
-
                 default:
                     break;
-
-                } // end switch menuConfigurar
+                }
                 break;
-
             case SOBRE:
-
                 cleanScreen();
                 drawMenu(menuSobre);
                 menuSobre.escolha_feita = ler_opcoes_do_menu(menuSobre, "Escolha uma opção: ");
@@ -239,20 +249,17 @@ int main(){
                         break;
                     default:
                         break;
-                } // end switch menuSobre
+                }
                 break;
-
             case SAIR:
                 printf("Saindo do programa...\n");
                 gameOver = true;
                 break;
-
             default:
                 printf("Opção inválida!\n");
                 break;
-
-        } // end switch escolha do menu principal
-    } // end while loop gameOver
+        }
+    }
 
     return 0; 
 } // fim main
@@ -441,6 +448,7 @@ int load_palavras_file(const char *filename, char out_palavras[MAX_PALAVRAS][MAX
         /* trim left */
         char *s = line;
         while (*s == ' ' || *s == '\t' || *s == '\r' || *s == '\n') s++;
+
         /* trim right/newline */
         char *e = s + strlen(s) - 1;
         while (e >= s && (*e == '\n' || *e == '\r' || *e == ' ' || *e == '\t')) { *e = '\0'; e--; }
@@ -466,7 +474,9 @@ int load_palavras_file(const char *filename, char out_palavras[MAX_PALAVRAS][MAX
  * Retorna o número de palavras lidas (0 indica falha/nenhuma palavra).
  */
 int carregar_tema(const char *tema, char palavras_file[MAX_PALAVRAS][MAX_PALAVRA_SIZE], int max_palavras) {
+    
     char filename[256];
+    // faz o mesmo que o printf mas com "fazer" strings
     snprintf(filename, sizeof(filename), "palavras_%s.txt", tema);
 
     int n = load_palavras_file(filename, palavras_file, max_palavras);

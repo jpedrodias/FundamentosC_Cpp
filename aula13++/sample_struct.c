@@ -7,7 +7,9 @@ struct Ponto {
 };
 
 
+
 int main() {
+
 
     // Declaração e inicialização de struct Ponto
     struct Ponto ponto = {
@@ -15,8 +17,12 @@ int main() {
         .y = 0
     };
 
+
     // Impressão das coordenadas do ponto único
     printf("Coordenada do ponto unico {x= %d, y= %d}\n", ponto.x, ponto.y);
+
+
+
 
 
     // Declaração e inicialização de um array de structs Ponto
