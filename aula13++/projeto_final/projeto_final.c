@@ -216,8 +216,9 @@ int main(){
                         ler_enter_para_continuar("Pressione Enter para voltar ao menu...");
                         #endif
 
-                    }
+                    } // end menuConfigurarDificuldade
                     break;
+
                 case CONFIGURAR_TEMA:
                     
                     cleanScreen();
@@ -232,13 +233,14 @@ int main(){
                             printf("Tema definido para: %s\n", estado_jogo.tema_atual);
                             ler_enter_para_continuar("Pressione Enter para voltar ao menu...");
                         #endif
-
-                    }
+                    } // end if menuConfigurarTema
                     break;
+
                 default:
                     break;
                 }
                 break;
+
             case SOBRE:
                 cleanScreen();
                 drawMenu(menuSobre);
@@ -249,17 +251,19 @@ int main(){
                         break;
                     default:
                         break;
-                }
+                } // end switch menuSobre
                 break;
+
             case SAIR:
                 printf("Saindo do programa...\n");
                 gameOver = true;
                 break;
+
             default:
                 printf("Opção inválida!\n");
                 break;
-        }
-    }
+        } // end switch case menuPrincipal
+    } // end while not game over
 
     return 0; 
 } // fim main
